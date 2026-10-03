@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a0c0f">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-title" content="Upwind">
+<script data-pca>window.PCA_MOD="uw";
+/* Preconnect anonymous statistics (GoatCounter). Sends only activity paths — never names, organizations, or typed text.
+   Turn off per device on the Privacy page (localStorage 'preconnect-stats' = 'off'). Not sent from file:// or localhost. */
+(function(){var off=false;try{off=localStorage.getItem('preconnect-stats')==='off';}catch(e){}
+ var P=window.PCA={mod:window.PCA_MOD||'app',off:off,q:[],seen:{},cur:null,
+  clean:function(p){return String(p).toLowerCase().replace(/[^a-z0-9\/\-]+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'').slice(0,120);},
+  ev:function(path){if(this.off)return;var p=this.clean(path);if(this.q.length<60)this.q.push({path:p,title:p,event:true});this.flush();},
+  flush:function(){var g=window.goatcounter,s=this;if(!g||typeof g.count!=='function'){if(!s.t)s.t=setTimeout(function(){s.t=null;s.flush();},1500);return;}while(s.q.length){try{g.count(s.q.shift());}catch(e){}}},
+  bkt:function(n){n=+n;return n>=90?'score-90-100':n>=80?'score-80s':n>=70?'score-70s':n>=60?'score-60s':'score-under-60';},
+  att:function(n){return 'attempt-'+(n>=5?'5plus':n);},
+  begin:function(mod,act,where){this.abandon();this.cur={mod:mod,act:act,where:where};this.ev(mod+'/start/'+act);},
+  end:function(detail){var c=this.cur;if(!c)return;this.cur=null;this.ev(c.mod+'/finish/'+c.act+(detail?'/'+detail:''));},
+  abandon:function(){var c=this.cur;if(!c)return;this.cur=null;var w='';try{w=c.where?c.where():'';}catch(e){}this.ev(c.mod+'/quit/'+c.act+(w?'/'+w:''));},
+  err:function(mod,msg){var k=mod+'|'+msg;if(this.seen[k])return;this.seen[k]=1;this.ev('error/'+mod+'/'+String(msg).slice(0,60));}};
+ if(!off){var s=document.createElement('script');s.async=true;s.src='https://gc.zgo.at/count.js';s.setAttribute('data-goatcounter','https://preconnect.goatcounter.com/count');(document.head||document.documentElement).appendChild(s);}
+ window.addEventListener('error',function(e){P.err(P.mod||'app',e&&e.message||'error');});
+ window.addEventListener('pagehide',function(){P.abandon();});
+})();
+</script>
+<title>Upwind</title>
+<script src="preconnect-core.js"></script>
+<style>
+/* Fonts are served from this site (fonts/, SIL Open Font License). Nothing loads from Google: works offline and makes no outside request. */
+@font-face{font-family:"Atkinson Hyperlegible";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/atkinson-hyperlegible-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"Atkinson Hyperlegible";font-style:normal;font-weight:700;font-display:swap;src:url(fonts/atkinson-hyperlegible-latin-700-normal.woff2) format("woff2")}
+@font-face{font-family:"Saira Condensed";font-style:normal;font-weight:500;font-display:swap;src:url(fonts/saira-condensed-latin-500-normal.woff2) format("woff2")}
+@font-face{font-family:"Saira Condensed";font-style:normal;font-weight:600;font-display:swap;src:url(fonts/saira-condensed-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:"Saira Condensed";font-style:normal;font-weight:700;font-display:swap;src:url(fonts/saira-condensed-latin-700-normal.woff2) format("woff2")}
+/* Milestone 1: every button is at least 48 px tall (finger-sized, gloves on). */
+button{min-height:48px}
+</style>
+<style>
+:root{--bg:#0a0c0f;--deck:#14171c;--deck2:#1c2026;--line:#2a2f37;--ink:#f6f7f9;--soft:#aab2bd;--acc:#49c76f;--acc-ink:#06130a;--hot:#ff6b61;--warm:#f0b323;--cold:#49c76f;--purple:#7a5cff}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",system-ui,sans-serif;-webkit-text-size-adjust:100%}
+body{max-width:540px;margin:0 auto;padding:calc(10px + env(safe-area-inset-top,0px)) calc(12px + env(safe-area-inset-right,0px)) calc(40px + env(safe-area-inset-bottom,0px)) calc(12px + env(safe-area-inset-left,0px))}
+h1,h2,h3,.num{font-family:"Saira Condensed","Arial Narrow",sans-serif}
+button{font-family:inherit;font-size:15px;border-radius:6px;padding:11px 12px;cursor:pointer;color:var(--ink);background:var(--deck2);border:1px solid var(--line);touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;line-height:1.15}
+button:active{transform:translateY(1px)}button:disabled{opacity:.45;cursor:default}
+.go{background:var(--acc);border-color:var(--acc);color:var(--acc-ink);font-family:"Saira Condensed",sans-serif;font-weight:600;font-size:18px;letter-spacing:.5px;text-transform:uppercase}
+.on{background:#1f6b45!important;border-color:#2f9e66!important;color:#fff}
+.hidden{display:none!important}
+.brand{font-family:"Saira Condensed",sans-serif;font-weight:700;font-size:15px;letter-spacing:1.5px;color:var(--acc)}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px}
+.card{background:var(--deck);border:0;border-left:4px solid var(--acc);border-radius:6px;padding:12px 14px;margin-bottom:10px}.card.rdy{background:linear-gradient(135deg,rgba(73,199,111,.2),var(--deck) 70%)}
+.stat{font-size:13px;color:var(--soft);margin-top:6px;line-height:1.35}
+.row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.overlay{position:fixed;inset:0;background:rgba(6,10,16,.93);display:flex;align-items:flex-start;justify-content:center;padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(16px + env(safe-area-inset-bottom,0px));z-index:10;overflow:auto}
+.overlay .box{background:var(--deck);border:1px solid var(--line);border-radius:8px;padding:18px;max-width:480px;width:100%;margin:auto}
+.overlay h2{font-size:27px;margin:0 0 8px;font-weight:600;line-height:1.1}
+.overlay p{font-size:16px;line-height:1.5;color:#dce6f0;margin:0 0 12px}
+.mrow{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-top:1px solid #2a3a4c;font-size:15px}.mrow:first-child{border-top:0}.mrow span{color:var(--soft)}
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:6px 0 10px}
+.scen{display:block;width:100%;text-align:left;padding:12px 70px 12px 14px;margin-bottom:8px;position:relative;background:var(--deck);border:0;border-left:4px solid var(--acc);border-radius:6px}.scen b{display:block;font-family:"Saira Condensed";font-size:21px;font-weight:600;line-height:1.05}.scen span{font-size:14px;color:var(--soft)}.scen .chip{position:absolute;right:12px;top:50%;transform:translateY(-50%)}
+.scen.soon{border-left-color:var(--line)}
+.legal{font-size:12px;color:#8b9cad;line-height:1.45;margin-top:10px}
+input{font-family:inherit;font-size:16px;padding:10px;border-radius:8px;border:1px solid var(--line);background:#0d141c;color:var(--ink);width:100%}
+.bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden}.bar div{height:100%;width:0;background:var(--acc)}
+.zone{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+#b-inst.on{background:#3b2a6b!important;border-color:var(--purple)!important;color:#fff}
+</style>
+</head>
+<body>
+<div id="pc-drill" class="pc-drillbar hidden" data-hub="../"></div>
+<div id="home">
+  <div class="flex" style="margin:0 0 8px"><a href="../" style="display:inline-flex;align-items:center;min-height:44px;font-family:'Saira Condensed';font-size:15px;font-weight:600;letter-spacing:1px;color:#ff8a3d;text-decoration:none">◂ PRECONNECT</a><div class="sp"></div><a href="../feedback.html?from=uw" style="display:inline-flex;align-items:center;min-height:44px;font-size:14px;font-weight:700;color:var(--soft);text-decoration:none;margin-right:12px">Feedback</a><button class="gear" id="h-set">Settings</button></div>
+  <div class="top"><div><div class="brand" style="font-size:34px;letter-spacing:3px">UPWIND</div><h1 style="font-size:19px;font-weight:400;font-family:'Atkinson Hyperlegible',system-ui,sans-serif;margin-top:2px">Upwind, uphill, upstream.</h1></div></div>
+  <div class="card rdy" id="rdy"><div class="flex"><div><div class="small">Your readiness</div><b id="rdy-t" style="display:block;font-family:'Saira Condensed';font-size:22px;line-height:1.05"></b><div class="small" id="rdy-s"></div></div><div class="sp"></div><div class="num" id="rdy-n"></div></div><div class="bar" style="margin-top:10px"><div id="rdy-bar" style="transition:width .6s ease-out"></div></div></div>
+  <div class="card"><div class="small">What this is</div><p style="margin:4px 0 0;font-size:15px;line-height:1.45">Hazmat practice at the Awareness and Operations level: see it from a distance, look it up, set the zones, read the meter, protect people, and know when the right call is <b>isolate, deny entry, call the hazmat team</b>. Built around the <b id="erg-ed"></b> workflow. <b>On a real call, use your department's current ERG or the PHMSA ERG app.</b></p></div>
+  <div class="sec">1 · Learn</div>
+  <button class="scen soon" id="h-learn" disabled><span class="chip dim" id="chip-lesson">Soon</span><b>The lesson</b><span>12 short slides with a check each: recognition, placards, containers, the ERG, zones, PPE limits, meters, defensive actions, decon, notifications, handoff</span></button>
+  <div class="sec">2 · Quick drills</div>
+  <div id="drills"></div>
+  <div class="sec">3 · Incidents</div>
+  <div id="incidents"></div>
+  <div class="tiers"><button data-tier="0">Guided</button><button data-tier="1">Recall</button><button data-tier="2">Chaos</button></div>
+  <p class="stat" id="tierhelp" style="margin:0 0 10px"></p>
+  <div class="sec">Drill night</div>
+  <button id="b-inst" style="width:100%;margin-bottom:8px">Instructor mode: off</button>
+  <p class="stat" style="margin:0 0 6px">Live injects (a wind shift, a second container, a symptomatic bystander, a meter alarm) and a freeze while an incident runs. On by itself during a Drill Night. Arrives with the first incidents.</p>
+  <div class="sec">More</div>
+  <div class="row"><button id="h-ref">Pocket reference</button><button id="h-prog">My progress</button></div>
+  <button id="h-about" style="width:100%;margin-top:6px">About this app</button>
+  <p class="legal">A practice tool. It does not replace an official course, a department's procedures, or the current Emergency Response Guidebook, and it does not issue certification. Operations-level responders act defensively, from outside the hazard, and call a hazmat team for anything more. Not affiliated with or endorsed by PHMSA, the NFPA, or any hazmat team.</p>
+</div>
+<div class="overlay hidden" id="pc-drillov" style="z-index:25"><div class="box" id="pc-drillbox"></div></div>
+<div class="overlay hidden" id="setov" style="z-index:20"><div class="box">
+ <div class="flex"><h2 style="margin:0">Settings</h2><div class="sp"></div><button class="gear" id="set-close">Done</button></div>
+ <div class="sec">Display</div>
+ <div class="set"><div class="k">Text size</div><div class="seg2" data-set="text"><button data-val="normal">Normal</button><button data-val="large">Large</button></div></div>
+ <div class="set"><div class="k">Contrast<small>High: brighter text on black. Daylight: white text and bold edges, for sun and glare.</small></div><div class="seg2" data-set="contrast"><button data-val="normal">Off</button><button data-val="high">High</button><button data-val="day">Daylight</button></div></div>
+ <div class="set"><div class="k">Motion<small>Auto follows your phone's Reduce Motion setting.</small></div><div class="seg2" data-set="motion"><button data-val="auto">Auto</button><button data-val="off">Off</button></div></div>
+ <div class="sec">Feedback</div>
+ <div class="set"><div class="k">Sound<small>A meter alarm, a tone for right and wrong, and a chime when you finish.</small></div><div class="seg2" data-set="sound"><button data-val="off">Off</button><button data-val="on">On</button></div></div>
+ <div class="set"><div class="k">Haptics<small>A tap you can feel on alarms and mistakes.</small></div><div class="seg2" data-set="haptics"><button data-val="off">Off</button><button data-val="on">On</button></div></div>
+ <div class="sec">Privacy</div>
+ <div class="set"><div class="k">Anonymous statistics<small>Counts like "someone finished the placard drill." Never names. <a href="../privacy.html" style="color:var(--acc)">Details</a></small></div><div class="seg2" data-set="stats"><button data-val="off">Off</button><button data-val="on">On</button></div></div>
+ <p class="stat" style="margin-top:10px">Settings apply to every Preconnect module on this phone.</p>
+</div></div>
+<div class="overlay hidden" id="infoov" style="z-index:15"><div class="box"><div id="info-b"></div><button class="go" id="info-close" style="width:100%;margin-top:10px">Close</button></div></div>
+<script>
+/* =================== core =================== */
+const APP_VERSION='0.1.0';
+/* Screen wake lock (Milestone 1): on only while an incident runs. */
+const WAKE={s:null,want:false};
+function keepAwake(on){WAKE.want=!!on;const wl=(typeof navigator!=='undefined')&&navigator.wakeLock;if(!wl||!wl.request)return;
+  if(on){if(WAKE.s)return;try{wl.request('screen').then(s=>{WAKE.s=s;if(s.addEventListener)s.addEventListener('release',()=>{if(WAKE.s===s)WAKE.s=null;});}).catch(()=>{});}catch(e){}}
+  else if(WAKE.s){const s=WAKE.s;WAKE.s=null;try{Promise.resolve(s.release&&s.release()).catch(()=>{});}catch(e){}}}
+if(typeof document!=='undefined'&&document.addEventListener)document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&WAKE.want&&!WAKE.s)keepAwake(true);});
+const $=id=>document.getElementById(id);
+const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+let TIER=0,NOW=()=>performance.now()/1000;
+const pca=(f,...a)=>{try{const P=typeof window!=='undefined'&&window.PCA;if(P&&P[f])return P[f](...a);}catch(e){}};
+const KEY='upwind';
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{runs:[]};}catch(e){return {runs:[]};}}
+function save(p){try{localStorage.setItem(KEY,JSON.stringify(p));}catch(e){}}
+function record(kind,id,score,extra){const p=load();p.runs=(p.runs||[]).concat([pcDrillStamp(Object.assign({kind,id,score,d:new Date().toISOString(),tier:TIER},extra||{}))]).slice(-500);save(p);}
+function info(h){$('info-b').innerHTML=h;$('infoov').classList.remove('hidden');}$('info-close').onclick=()=>$('infoov').classList.add('hidden');
+/* =================== facts: the one materials table ===================
+   Every guide number, class or distance the app ever shows comes from here. Each entry names its source page and carries
+   `checked`: the date and person who read the line from the printed ERG. An entry a drill or incident uses must be checked
+   (the `facts` test enforces it). Values below are placeholders until Max reads them from his ERG2024; nothing shows them yet. */
+const ERG_ED='ERG2024';
+const MAT={
+ gasoline:{un:'1203',name:'Gasoline',guide:128,cls:'3',src:'ERG2024 Guide 128',checked:null,meter:['lel']},
+ propane:{un:'1978',name:'Propane',guide:115,cls:'2.1',bleve:true,src:'ERG2024 Guide 115',checked:null,meter:['lel']},
+ natgas:{un:'1971',name:'Natural gas, compressed (methane)',guide:115,cls:'2.1',src:'ERG2024 Guide 115',checked:null,meter:['lel']},
+ ammonia:{un:'1005',name:'Ammonia, anhydrous',guide:125,cls:'2.2 · inhalation hazard',tih:true,src:'ERG2024 Guide 125, Table 1, Table 3',checked:null,meter:[]},
+ chlorine:{un:'1017',name:'Chlorine',guide:124,cls:'2.3',tih:true,src:'ERG2024 Guide 124, Table 1, Table 3',checked:null,meter:[]},
+ co:{un:'1016',name:'Carbon monoxide, compressed',guide:119,cls:'2.3',tih:true,src:'ERG2024 Guide 119, Table 1',checked:null,meter:['co']},
+ vcm:{un:'1086',name:'Vinyl chloride, stabilized',guide:'116P',cls:'2.1',src:'ERG2024 Guide 116P',checked:null,meter:['lel']},
+ unknown:{un:null,name:'Unknown cargo',guide:111,cls:null,src:'ERG2024 Guide 111',checked:null,meter:['lel','o2','co','h2s']}};
+/* Local names and lists that must be confirmed with Bay County Emergency Management before they count as fact in the app.
+   Nothing here is shown as a phone number, and the About text marks each one "to confirm". */
+const TO_CONFIRM=['the regional hazmat team and how it is called (Regional Response Team 3, Bay City)','the notification list for a hazmat release (county dispatch, the LEPC, EGLE, MDARD for farm chemicals, the railroad, the utility)'];
+/* Meter: a generic fire-service 4-gas meter with common default alarm points. Alarm settings vary by meter and department — know yours. */
+const METER={o2lo:19.5,o2hi:23.5,lel:10,co:35,h2s:10};
+/* =================== planned activities (home list) =================== */
+const DRILLS={};   /* U1 fills this: placard, erg, container, nfpa704, zones, meter, shelter, ppe */
+const SCN={};      /* U2 onward: i75, nurse, propane, pool, house, rail, powder */
+const PLAN={
+ drills:[['placard','Placard ID','Class, division and what the colors mean'],['erg','ERG lookup','UN number or name to guide and isolation distance'],['container','Container recognition','Tankers, pressure tanks, rail cars, totes, cylinders, nurse tanks'],['nfpa704','NFPA 704','Read the diamond at a fixed facility'],['zones','Zone setup','Wind plus the ERG line: which picture is right'],['meter','Meter interpretation','Readings to action, and when the meter is lying'],['shelter','Shelter or evacuate','Short situations, one right call'],['ppe','PPE limits','What structural gear and SCBA can and cannot do']],
+ scn:[['i75','Tanker on its side, I-75','Gasoline toward a storm drain · the first incident, coming next'],['nurse','Nurse tank on a gravel road','Anhydrous ammonia in sugar beet country · coming next'],['propane','Propane at the refill cage','Cylinders venting beside a bulk tank'],['pool','Chlorine at the swim club','A cylinder hissing in the pump room'],['house','Something in the house','The meter tells the story: CO or gas'],['rail','Rail car by the siding','A pressure car with a frosted valve'],['powder','White powder in an envelope','Don\'t touch, don\'t test, isolate']]};
+const ACTS=[['lesson','lesson'],...PLAN.drills.map(d=>['drill',d[0]]),...PLAN.scn.map(s=>['scenario',s[0]])];
+function readiness(){const R=load().runs||[];const best={};R.forEach(r=>{const k=r.kind+':'+r.id;best[k]=Math.max(best[k]||0,+r.score||0);});const done=ACTS.filter(([k,i])=>best[k+':'+i]!==undefined).length;return {done,total:ACTS.length,pct:Math.round(done/ACTS.length*100),best};}
+function homeRender(){const R=readiness();$('erg-ed').textContent=ERG_ED;
+  const item=(kind,[id,name,sub])=>`<button class="scen${kind==='scenario'&&SCN[id]||kind==='drill'&&DRILLS[id]?'':' soon'}" data-${kind==='drill'?'drill':'scn'}="${id}"${kind==='scenario'&&SCN[id]||kind==='drill'&&DRILLS[id]?'':' disabled'}><span class="chip dim" id="chip-${id}">${R.best[kind+':'+id]!==undefined?R.best[kind+':'+id]:'Soon'}</span><b>${esc(name)}</b><span>${esc(sub)}</span></button>`;
+  const dh=PLAN.drills.map(d=>item('drill',d)).join(''),sh=PLAN.scn.map(s=>item('scenario',s)).join('');if($('drills').innerHTML!==dh)$('drills').innerHTML=dh;if($('incidents').innerHTML!==sh)$('incidents').innerHTML=sh;
+  const t=`${R.done} of ${R.total} activities`;if($('rdy-t').textContent!==t)$('rdy-t').textContent=t;
+  const sub=R.done?`${TIER===0?'Guided':TIER===1?'Recall':'Chaos'} mode`:'Coming in the next updates: the lesson, eight drills, seven incidents. Your best scores will show up here.';if($('rdy-s').textContent!==sub)$('rdy-s').textContent=sub;
+  const n=R.pct+'%';if($('rdy-n').textContent!==n)$('rdy-n').textContent=n;const bar=$('rdy-bar');if(bar&&bar.style)bar.style.width=R.pct+'%';}
+function showHome(){keepAwake(false);['infoov'].forEach(i=>$(i).classList.add('hidden'));document.querySelectorAll('[data-tier]').forEach(b=>b.classList.toggle('on',+b.dataset.tier===TIER));$('tierhelp').textContent=['Guided: the ERG distances are drawn on the map and the next step is named.','Recall: no hints. You set the zones and pick the actions.','Chaos: Recall plus a wind shift, a second container, a sensor fault, a crowd.'][TIER];homeRender();}
+document.querySelectorAll('[data-tier]').forEach(b=>b.onclick=()=>{TIER=+b.dataset.tier;showHome();});
+/* =================== reference, about, progress =================== */
+$('h-ref').onclick=()=>info(`<h2>Pocket reference</h2>
+ <div class="sec">The ERG, in order</div><p>1 · Find the material: UN number (orange panel or placard), name (shipping papers), or the placard itself. 2 · Go to the orange guide page. 3 · If the line is highlighted, use the green pages for isolation and protective action distances; small or large spill, day or night. 4 · Isolate in all directions first, then protect downwind.</p>
+ <div class="sec">Zones</div><p><span class="zone" style="background:var(--hot)"></span><b>Hot:</b> the hazard. Operations crews do not enter.<br><span class="zone" style="background:var(--warm)"></span><b>Warm:</b> decon and the path in and out.<br><span class="zone" style="background:var(--cold)"></span><b>Cold:</b> command, staging, EMS. Upwind, uphill, upstream of all of it.</p>
+ <div class="sec">4-gas meter (generic)</div><div class="mrow"><span>Oxygen</span><b>${METER.o2lo}% low · ${METER.o2hi}% high</b></div><div class="mrow"><span>Flammable (LEL)</span><b>alarm at ${METER.lel}%</b></div><div class="mrow"><span>Carbon monoxide</span><b>${METER.co} ppm</b></div><div class="mrow"><span>Hydrogen sulfide</span><b>${METER.h2s} ppm</b></div><p class="stat">Bump test before use. A 4-gas meter does not read ammonia or chlorine. <b>Alarm settings vary by meter and department — know yours.</b></p>
+ <div class="sec">Always right</div><p>Isolate. Deny entry. Call the hazmat team. Then, from outside the hazard, do what Operations can do: protect people, dike and divert, knock down vapor from a distance, decon, notify.</p>
+ <p class="stat">Distances are not listed here on purpose: read them from your current ERG. The drills and incidents will quote ${ERG_ED} lines once each one has been checked against the book.</p>`);
+$('h-about').onclick=()=>info(`<h2>About Upwind</h2><p>Upwind is a free practice tool for hazardous-materials response at the Awareness and Operations level, in the same family as Charge the Line, Patient Contact, Bleed Control and BLS Ready. It models the competencies in NFPA 470 in its own words and follows the ${ERG_ED} workflow. It never teaches hot-zone entry as an Operations task.</p>
+ <p><b>It is practice, not certification, and not a reference.</b> On a call, use your department's current ERG or the PHMSA ERG app, and your own procedures.</p>
+ <p><b>Local details still to confirm with Bay County Emergency Management:</b> ${TO_CONFIRM.map(esc).join('; ')}. No phone numbers are built in until they are confirmed.</p>
+ <p class="legal">Emergency Response Guidebook © U.S. Department of Transportation (PHMSA), Transport Canada and the Secretariat of Communications and Transport of Mexico. NFPA 470 is a standard of the National Fire Protection Association. Upwind is not affiliated with or endorsed by any of them. Version ${APP_VERSION}.</p>`);
+$('h-prog').onclick=()=>{const p=load();const R=p.runs||[];const best=(k,id)=>{const r=R.filter(x=>x.kind===k&&x.id===id);return r.length?Math.max(...r.map(x=>x.score)):null;};
+  const line=(n,b)=>`<div class="mrow"><span>${esc(n)}</span><b style="${b===null?'color:var(--soft)':''}">${b===null?'not yet':b}</b></div>`;
+  info(`<h2>My progress</h2><input id="p-name" placeholder="Your name" value="${esc(p.name||'')}" style="margin-bottom:6px"><input id="p-dept" placeholder="Department or organization" value="${esc(p.dept||'')}" style="margin-bottom:10px">
+   <div class="sec">LESSON</div>${line('The lesson',best('lesson','lesson'))}<div class="sec">DRILLS</div>${PLAN.drills.map(d=>line(d[1],best('drill',d[0]))).join('')}<div class="sec">INCIDENTS</div>${PLAN.scn.map(s=>line(s[1],best('scenario',s[0]))).join('')}
+   <button id="p-csv" style="width:100%;margin-top:10px">Download practice record (CSV)</button>`);
+  $('p-csv').onclick=()=>{const q=load();q.name=$('p-name').value.trim();q.dept=$('p-dept').value.trim();save(q);const nm={lesson:'Lesson',scenario:'Incident',drill:'Drill'};const NAME=Object.fromEntries([...PLAN.drills,...PLAN.scn].map(x=>[x[0],x[1]]));
+    const rows=[['Name','Organization','Type','Activity','Date','Mode','Score']].concat((q.runs||[]).map(r=>[q.name||'',q.dept||'',nm[r.kind]||r.kind,r.kind==='lesson'?'The lesson':NAME[r.id]||r.id,r.d.slice(0,16).replace('T',' '),r.kind==='scenario'?['Guided','Recall','Chaos'][r.tier]||'':'',r.score]));
+    const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='upwind-practice-record.csv';a.click();}catch(e){}};};
+/* =================== instructor switch (the fab and injects arrive with the first incidents) =================== */
+let INST=false;
+const instOn=()=>INST||!!pcDrill();
+function instSync(){const b=$('b-inst');if(b){b.textContent='Instructor mode: '+(INST?'on':pcDrill()?'on (Drill Night)':'off');b.classList.toggle('on',instOn());}}
+$('b-inst').onclick=()=>{INST=!INST;const p=load();p.inst=INST;save(p);instSync();};
+/* =================== boot =================== */
+if('serviceWorker' in navigator&&location.protocol==='https:')window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+applySettings();settingsBind();INST=!!load().inst;pcDrillBind();showHome();instSync();
+/* the home page's daily drill deep-links here: upwind/?drill=placard (unknown ids, and ids not built yet, are ignored) */
+{const q=new URLSearchParams((typeof location!=='undefined'&&location.search)||'').get('drill');if(q&&DRILLS[q]&&typeof drillStart==='function')drillStart(q);}
+</script>
+</body>
+</html>
