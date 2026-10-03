@@ -18,3 +18,12 @@ Rules this module adds to the platform's (see CLAUDE.md for the platform rules):
 - record: shared run shape; drill-night stamping; best-score chips; progress screen and CSV.
 - privacy: the snippet cleans paths, uses coarse bands, honors the opt-out; the app never passes a name or typed text to it.
 - browser: home, settings, reference, about, progress, Chaos tier, instructor switch, drill picker and bar, large text, Daylight, the daily-link stub, landscape and landscape settings.
+
+## U1 checks (added October 3, 2026)
+
+- `balance`: the lesson's options plus twenty generated banks of every drill; the right answer may be the longest or the shortest in at most 45 % of questions. The `ppe` drill picks one of two equal-meaning phrasings per option each run so no answer is always the longest; the `meter` action strings are kept within a few characters of each other for the same reason. Ties count as longest, so equal lengths are avoided on purpose.
+- `lesson`: all slides right scores 100 and is recorded; all first tries wrong scores 0; Next stays disabled until the check is answered; Leave the lesson returns home; twelve slides with three options, one good, a why, and the "know yours" line on the meter slide.
+- `drills`: every bank has at least eight distinct questions with two distractors that never include the answer; placard class keys are re-derived from the test's own class table (30 generations), meter keys from the test's own alarm points (40 generations), zone keys from the test's own compass (30), 704 keys from the highest field (30); the ERG drill asks no guide numbers while `MAT` has no checked entry; no question, answer or distractor carries an ERG distance.
+- `quiz`: a right run scores 100 and records `{kind:'drill'}`; a wrong run scores 0; options are shuffled once and a second tap on the same question is ignored; Quit closes and goes home; `?drill=placard` opens that drill and an unknown id is ignored; chips read Due and Again from `pcSpacing`; the statistics calls are `begin:uw/drill-…`, `abandon`, `begin:uw/lesson` with nothing typed in them.
+- Browser check: lesson row (answer by visible text, Next advances), one row per drill answered by visible text, the meter drill played to the end with real taps and a saved run, the daily link opening the drill.
+- Prove it can fail: set a `MAT` entry's `checked` and watch the ERG drill start asking its guide; flip one `H704` meaning and the 704 recalculation fails; change a placard class in `PLACARDS` and the placard recalculation fails.
