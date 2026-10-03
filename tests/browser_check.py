@@ -73,7 +73,8 @@ with sync_playwright() as p:
             rows.append((w, 'drill meter (full)', 0 if pg.evaluate('QZ.score') == 100 and pg.evaluate("JSON.parse(localStorage.getItem('upwind')).runs.length") >= 1 else 99)); pg.evaluate("localStorage.removeItem('upwind')")
         incident(pg, w, 'i75', 'incident ')
         if w == 390: incident(pg, w, 'nurse', 'nurse tank ', force='C')
-        if w == 320: incident(pg, w, 'propane', 'refill cage ', force='B')
+        if w == 320: incident(pg, w, 'propane', 'refill cage ', force='B'); incident(pg, w, 'house', 'house ', force='B')
+        if w == 390: incident(pg, w, 'pool', 'swim club ', force='A')
         if w == 390:   # instructor mode: switch on, open the incident, the floating button opens the sheet, an inject lands, freeze and resume, quit
             pg.goto(URL); pg.wait_for_timeout(150); tap(pg, '#b-inst'); tap(pg, '[data-scn="i75"]'); pg.wait_for_timeout(600)
             good = pg.evaluate("S.def.steps[0].routes.find(r=>r.kind==='good').name"); pg.locator('[data-r="route"]', has_text=good).first.click(); pg.wait_for_timeout(600)   # the wind inject waits until the crew is on scene
