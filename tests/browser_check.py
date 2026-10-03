@@ -13,6 +13,43 @@ def tap(pg, sel):   # a slow tap, the way a finger does it: press, pause, releas
     el = pg.locator(sel).first; el.scroll_into_view_if_needed(); pg.wait_for_timeout(80)
     b = el.bounding_box(); x, y = b['x'] + b['width'] / 2, b['y'] + b['height'] / 2
     pg.mouse.move(x, y); pg.mouse.down(); pg.wait_for_timeout(260); pg.mouse.up()
+def incident(pg, w, scn, pre, unlock=None, force=None):   # play an incident with real taps, a real drag and a map tap; unlock is a JS snippet for a locked incident (test stand-ins, never ERG values)
+    pg.goto(URL); pg.wait_for_timeout(150)
+    if unlock: pg.evaluate(unlock)
+    if force: pg.evaluate("window.FORCE_V={%s:'%s'}" % (scn, force))
+    tap(pg, '[data-scn="%s"]' % scn); pg.wait_for_timeout(600)
+    rows.append((w, pre + 'approach', pg.evaluate(OVER) + 1000 * pg.evaluate(SMALL)))
+    good = pg.evaluate("S.def.steps[0].routes.find(r=>r.kind==='good').name"); pg.locator('[data-r="route"]', has_text=good).first.click(); pg.wait_for_timeout(600)
+    ans = pg.evaluate("S.def.steps[S.i].o.find(o=>o[1]==='good')[0]"); pg.locator('[data-r="opt"]', has_text=ans).first.click(); pg.wait_for_timeout(150); rows.append((w, pre + 'decision', pg.evaluate(OVER) + 1000 * pg.evaluate(SMALL))); tap(pg, '[data-r="next"]'); pg.wait_for_timeout(600)
+    for lab in pg.evaluate("S.def.steps[S.i].items.filter(x=>x.need).map(x=>x.label)"): pg.locator('[data-r="bino"]', has_text=lab).first.click(); pg.wait_for_timeout(80)
+    rows.append((w, pre + 'binoculars', pg.evaluate(OVER) + 1000 * pg.evaluate(SMALL))); tap(pg, '[data-r="binook"]'); pg.wait_for_timeout(600)
+    ans = pg.evaluate("S.def.steps[S.i].opts.find(o=>o[1]==='good')[0]"); pg.locator('[data-r="erg"]', has_text=ans).first.click(); pg.wait_for_timeout(150); tap(pg, '[data-r="next"]'); pg.wait_for_timeout(600)
+    rows.append((w, pre + 'zones', pg.evaluate(OVER) + 1000 * pg.evaluate(SMALL)))
+    # drag the hot handle outward the way a finger does, then tap the map upwind for staging, then nudge warm with the buttons
+    svg = pg.locator('#uw-svg').bounding_box(); hb = pg.locator('#mh-hot').bounding_box(); cx, cy = svg['x'] + svg['width'] * 150 / 340, svg['y'] + svg['height'] * 140 / 300
+    hx, hy = hb['x'] + hb['width'] / 2, hb['y'] + hb['height'] / 2; dx, dy = hx - cx, hy - cy; d = (dx * dx + dy * dy) ** .5
+    pg.mouse.move(hx, hy); pg.mouse.down(); pg.wait_for_timeout(120)
+    for k in range(1, 9): pg.mouse.move(cx + dx / d * (d + k * 8), cy + dy / d * (d + k * 8)); pg.wait_for_timeout(40)
+    pg.mouse.up(); pg.wait_for_timeout(100)
+    hot_after = pg.evaluate("S.z.hot"); rows.append((w, pre + 'drag hot ring', 0 if hot_after >= 150 else 99))
+    while pg.evaluate("S.z.warm < S.z.hot+40"): tap(pg, '[data-r="nudge"][data-z="warm"][data-d="25"]')
+    upx, upy = pg.evaluate("(()=>{const v=vec(WX.dir),d=(S.z.warm+40)/S.scale;return [S.R.x+v.x*d,S.R.y+v.y*d];})()")   # a tap upwind, just outside the warm ring
+    pg.locator('#uw-svg').scroll_into_view_if_needed(); pg.wait_for_timeout(80); svg = pg.locator('#uw-svg').bounding_box()   # the nudge taps may have scrolled the top of the map away
+    pg.mouse.move(svg['x'] + svg['width'] * upx / 340, svg['y'] + svg['height'] * upy / 300); pg.mouse.down(); pg.wait_for_timeout(200); pg.mouse.up(); pg.wait_for_timeout(100)
+    rows.append((w, pre + 'staging by tap', 0 if pg.evaluate("zoneFit(S.z,WX.dir,MAT[S.def.mat].iso.ft).ok") else 99))
+    tap(pg, '[data-r="zonesok"]'); pg.wait_for_timeout(600)
+    for _ in range(8):
+        k = pg.evaluate("S?S.def.steps[S.i].k:null")
+        if k is None: break
+        if k == 'decide':
+            ans = pg.evaluate("S.def.steps[S.i].o.find(o=>o[1]==='good')[0]"); pg.locator('[data-r="opt"]', has_text=ans).first.click(); pg.wait_for_timeout(150); tap(pg, '[data-r="next"]'); pg.wait_for_timeout(600)
+        elif k == 'notify':
+            for lab in pg.evaluate("S.def.steps[S.i].items.filter(x=>x.need).map(x=>x.label)"): pg.locator('[data-r="chk"]', has_text=lab).first.click(); pg.wait_for_timeout(80)
+            tap(pg, '[data-r="notifyok"]'); pg.wait_for_timeout(600)
+        else: break
+    pg.wait_for_timeout(800)
+    rows.append((w, pre + '(full)', 0 if pg.is_visible('#doneov') and pg.text_content('#done-s') == '100' else 99)); pg.evaluate("localStorage.removeItem('upwind')")
+
 with sync_playwright() as p:
     b = p.chromium.launch()
     for w in (320, 390):
@@ -31,39 +68,8 @@ with sync_playwright() as p:
             for _ in range(8):
                 ans = pg.evaluate("QZ.qs[QZ.i].a"); pg.locator('[data-q="ans"]', has_text=ans).first.click(); pg.wait_for_timeout(100); tap(pg, '[data-q="next"]'); pg.wait_for_timeout(100)
             rows.append((w, 'drill meter (full)', 0 if pg.evaluate('QZ.score') == 100 and pg.evaluate("JSON.parse(localStorage.getItem('upwind')).runs.length") >= 1 else 99)); pg.evaluate("localStorage.removeItem('upwind')")
-        # the incident: unlock the gasoline entry the way a checked line would, then play with real taps, a real drag and a map tap
-        pg.goto(URL); pg.wait_for_timeout(150); tap(pg, '[data-scn="i75"]'); pg.wait_for_timeout(600)
-        rows.append((w, 'incident approach', pg.evaluate(OVER) + 1000 * pg.evaluate(SMALL)))
-        good = pg.evaluate("S.def.steps[0].routes.find(r=>r.kind==='good').name"); pg.locator('[data-r="route"]', has_text=good).first.click(); pg.wait_for_timeout(600)
-        ans = pg.evaluate("S.def.steps[S.i].o.find(o=>o[1]==='good')[0]"); pg.locator('[data-r="opt"]', has_text=ans).first.click(); pg.wait_for_timeout(150); rows.append((w, 'incident decision', pg.evaluate(OVER) + 1000 * pg.evaluate(SMALL))); tap(pg, '[data-r="next"]'); pg.wait_for_timeout(600)
-        for lab in pg.evaluate("S.def.steps[S.i].items.filter(x=>x.need).map(x=>x.label)"): pg.locator('[data-r="bino"]', has_text=lab).first.click(); pg.wait_for_timeout(80)
-        rows.append((w, 'incident binoculars', pg.evaluate(OVER) + 1000 * pg.evaluate(SMALL))); tap(pg, '[data-r="binook"]'); pg.wait_for_timeout(600)
-        ans = pg.evaluate("S.def.steps[S.i].opts.find(o=>o[1]==='good')[0]"); pg.locator('[data-r="erg"]', has_text=ans).first.click(); pg.wait_for_timeout(150); tap(pg, '[data-r="next"]'); pg.wait_for_timeout(600)
-        rows.append((w, 'incident zones', pg.evaluate(OVER) + 1000 * pg.evaluate(SMALL)))
-        # drag the hot handle outward the way a finger does, then tap the map upwind for staging, then nudge warm with the buttons
-        svg = pg.locator('#uw-svg').bounding_box(); hb = pg.locator('#mh-hot').bounding_box(); cx, cy = svg['x'] + svg['width'] * 150 / 340, svg['y'] + svg['height'] * 140 / 300
-        hx, hy = hb['x'] + hb['width'] / 2, hb['y'] + hb['height'] / 2; dx, dy = hx - cx, hy - cy; d = (dx * dx + dy * dy) ** .5
-        pg.mouse.move(hx, hy); pg.mouse.down(); pg.wait_for_timeout(120)
-        for k in range(1, 9): pg.mouse.move(cx + dx / d * (d + k * 8), cy + dy / d * (d + k * 8)); pg.wait_for_timeout(40)
-        pg.mouse.up(); pg.wait_for_timeout(100)
-        hot_after = pg.evaluate("S.z.hot"); rows.append((w, 'incident drag hot ring', 0 if hot_after >= 150 else 99))
-        while pg.evaluate("S.z.warm < S.z.hot+40"): tap(pg, '[data-r="nudge"][data-z="warm"][data-d="25"]')
-        upx, upy = pg.evaluate("(()=>{const v=vec(WX.dir),d=(S.z.warm+40)/S.scale;return [S.R.x+v.x*d,S.R.y+v.y*d];})()")   # a tap upwind, just outside the warm ring
-        pg.locator('#uw-svg').scroll_into_view_if_needed(); pg.wait_for_timeout(80); svg = pg.locator('#uw-svg').bounding_box()   # the nudge taps may have scrolled the top of the map away
-        pg.mouse.move(svg['x'] + svg['width'] * upx / 340, svg['y'] + svg['height'] * upy / 300); pg.mouse.down(); pg.wait_for_timeout(200); pg.mouse.up(); pg.wait_for_timeout(100)
-        rows.append((w, 'incident staging by tap', 0 if pg.evaluate("zoneFit(S.z,WX.dir,MAT[S.def.mat].iso.ft).ok") else 99))
-        tap(pg, '[data-r="zonesok"]'); pg.wait_for_timeout(600)
-        for _ in range(8):
-            k = pg.evaluate("S?S.def.steps[S.i].k:null")
-            if k is None: break
-            if k == 'decide':
-                ans = pg.evaluate("S.def.steps[S.i].o.find(o=>o[1]==='good')[0]"); pg.locator('[data-r="opt"]', has_text=ans).first.click(); pg.wait_for_timeout(150); tap(pg, '[data-r="next"]'); pg.wait_for_timeout(600)
-            elif k == 'notify':
-                for lab in pg.evaluate("S.def.steps[S.i].items.filter(x=>x.need).map(x=>x.label)"): pg.locator('[data-r="chk"]', has_text=lab).first.click(); pg.wait_for_timeout(80)
-                tap(pg, '[data-r="notifyok"]'); pg.wait_for_timeout(600)
-            else: break
-        pg.wait_for_timeout(800)
-        rows.append((w, 'incident (full)', 0 if pg.is_visible('#doneov') and pg.text_content('#done-s') == '100' else 99)); pg.evaluate("localStorage.removeItem('upwind')")
+        incident(pg, w, 'i75', 'incident ')
+        if w == 390: incident(pg, w, 'nurse', 'nurse tank ', force='C')
         pg.goto(URL); pg.wait_for_timeout(150); tap(pg, '#h-set'); pg.wait_for_timeout(150); rows.append((w, 'settings', pg.evaluate(OVER) + 1000 * pg.evaluate(SMALL))); tap(pg, '#set-close')
         tap(pg, '#h-ref'); pg.wait_for_timeout(150); rows.append((w, 'reference', pg.evaluate(OVER) + 1000 * pg.evaluate(SMALL))); tap(pg, '#info-close')
         tap(pg, '#h-about'); pg.wait_for_timeout(150); rows.append((w, 'about', pg.evaluate(OVER) + 1000 * pg.evaluate(SMALL))); tap(pg, '#info-close')

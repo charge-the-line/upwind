@@ -2,7 +2,7 @@
 // Human pace: about 1.2 s per tap on the controllable clock (global.__T), with the tick run between taps.
 const {boot}=require('./uw_mock.js');
 function play(id,tier,o={}){global.__T=1000;const b=boot(Object.assign({upwind:JSON.stringify({runs:[]})},o.store||{}));const {api,els}=b;
-  for(const k in api.MAT)api.MAT[k].checked='2026-10-03 test';if(o.variant)global.window.FORCE_V={[id]:o.variant};else delete global.window.FORCE_V;
+  for(const k in api.MAT)api.MAT[k].checked='2026-10-03 test';standIn(api);if(o.variant)global.window.FORCE_V={[id]:o.variant};else delete global.window.FORCE_V;
   api.setTier(tier);api.runStart(id);const adv=s=>{global.__T+=s;api.runTick();};const tap=ds=>{adv(o.fast?.2:1.2);api.runAct(ds);api.runTick();};
   let g=0,teamCalled=false;const out={ok:false,score:null,steps:[],errs:[]};
   while(api.S()&&g++<80){const S=api.S(),s=S.def.steps[S.i];if(!s)break;out.steps.push(s.k+(s.id?':'+s.id:''));
@@ -17,4 +17,6 @@ function play(id,tier,o={}){global.__T=1000;const b=boot(Object.assign({upwind:J
     if(s.k==='notify'){s.items.forEach((it,i)=>{if(it.need&&!o.notifyMiss&&!(o.notifySkipTeam&&it.id==='team'))tap({r:'chk',i:String(i)});if(!it.need&&o.notifyExtra)tap({r:'chk',i:String(i)});});tap({r:'notifyok'});continue;}
     break;}
   out.ok=!!els.doneov&&!els.doneov.classList.contains('hidden');out.score=+els['done-s'].textContent;out.body=els['done-b'].innerHTML;out.store=b.store;out.api=api;out.els=els;return out;}
-module.exports={play};
+// Test stand-ins for green-page rows Max has not read yet. These are NOT ERG values; the page keeps iso:null and the incident locked until the real row is stamped.
+function standIn(api){const a=api.MAT.ammonia;if(!a.iso)a.iso={m:0,ft:200,standIn:true};if(!a.t3)a.t3={nurse:{day:{low:.2,mod:.3,high:.4},night:{low:.7,mod:1,high:1.5}},standIn:true};}
+module.exports={play,standIn};
