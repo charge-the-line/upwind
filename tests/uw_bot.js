@@ -5,7 +5,9 @@ function play(id,tier,o={}){global.__T=1000;const b=boot(Object.assign({upwind:J
   for(const k in api.MAT)api.MAT[k].checked='2026-10-03 test';standIn(api);if(o.variant)global.window.FORCE_V={[id]:o.variant};else delete global.window.FORCE_V;
   api.setTier(tier);api.runStart(id);const adv=s=>{global.__T+=s;api.runTick();};const tap=ds=>{adv(o.fast?.2:1.2);api.runAct(ds);api.runTick();};
   let g=0,teamCalled=false;const out={ok:false,score:null,steps:[],errs:[]};
+  const fired=new Set();
   while(api.S()&&g++<80){const S=api.S(),s=S.def.steps[S.i];if(!s)break;out.steps.push(s.k+(s.id?':'+s.id:''));
+    (o.injects||[]).forEach((j,n)=>{if(!fired.has(n)&&(j.at===s.k||j.at===s.id)){fired.add(n);api.instOpen();adv(j.hold||2);out.injected=(out.injected||[]).concat(api.inject(j.id));api.instClose();}});
     if(s.k==='approach'){const want=o.route||'good';const i=s.routes.findIndex(r=>r.kind===want);tap({r:'route',i:String(i)});continue;}
     if(s.k==='decide'){let kind=o.choice||'good';if(o.choiceAt&&o.choiceAt[s.id])kind=o.choiceAt[s.id];let i=s.o.findIndex(x=>x[1]===kind);if(i<0)i=s.o.findIndex(x=>x[1]==='good');tap({r:'opt',i:String(i)});if(!teamCalled&&!o.noTeam&&S.i>=2){tap({r:'team'});teamCalled=true;}if(o.dwell)adv(o.dwell);tap({r:'next'});continue;}
     if(s.k==='bino'){s.items.forEach((it,i)=>{if(it.need&&!o.binoMiss)tap({r:'bino',i:String(i)});if(!it.need&&o.binoWrong)tap({r:'bino',i:String(i)});});tap({r:'binook'});continue;}
