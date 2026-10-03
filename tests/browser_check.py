@@ -32,7 +32,7 @@ with sync_playwright() as p:
                 ans = pg.evaluate("QZ.qs[QZ.i].a"); pg.locator('[data-q="ans"]', has_text=ans).first.click(); pg.wait_for_timeout(100); tap(pg, '[data-q="next"]'); pg.wait_for_timeout(100)
             rows.append((w, 'drill meter (full)', 0 if pg.evaluate('QZ.score') == 100 and pg.evaluate("JSON.parse(localStorage.getItem('upwind')).runs.length") >= 1 else 99)); pg.evaluate("localStorage.removeItem('upwind')")
         # the incident: unlock the gasoline entry the way a checked line would, then play with real taps, a real drag and a map tap
-        pg.goto(URL); pg.wait_for_timeout(150); pg.evaluate("MAT.gasoline.checked='browser-check';homeRender();"); tap(pg, '[data-scn="i75"]'); pg.wait_for_timeout(600)
+        pg.goto(URL); pg.wait_for_timeout(150); tap(pg, '[data-scn="i75"]'); pg.wait_for_timeout(600)
         rows.append((w, 'incident approach', pg.evaluate(OVER) + 1000 * pg.evaluate(SMALL)))
         good = pg.evaluate("S.def.steps[0].routes.find(r=>r.kind==='good').name"); pg.locator('[data-r="route"]', has_text=good).first.click(); pg.wait_for_timeout(600)
         ans = pg.evaluate("S.def.steps[S.i].o.find(o=>o[1]==='good')[0]"); pg.locator('[data-r="opt"]', has_text=ans).first.click(); pg.wait_for_timeout(150); rows.append((w, 'incident decision', pg.evaluate(OVER) + 1000 * pg.evaluate(SMALL))); tap(pg, '[data-r="next"]'); pg.wait_for_timeout(600)
@@ -49,6 +49,7 @@ with sync_playwright() as p:
         hot_after = pg.evaluate("S.z.hot"); rows.append((w, 'incident drag hot ring', 0 if hot_after >= 150 else 99))
         while pg.evaluate("S.z.warm < S.z.hot+40"): tap(pg, '[data-r="nudge"][data-z="warm"][data-d="25"]')
         upx, upy = pg.evaluate("(()=>{const v=vec(WX.dir),d=(S.z.warm+40)/S.scale;return [S.R.x+v.x*d,S.R.y+v.y*d];})()")   # a tap upwind, just outside the warm ring
+        pg.locator('#uw-svg').scroll_into_view_if_needed(); pg.wait_for_timeout(80); svg = pg.locator('#uw-svg').bounding_box()   # the nudge taps may have scrolled the top of the map away
         pg.mouse.move(svg['x'] + svg['width'] * upx / 340, svg['y'] + svg['height'] * upy / 300); pg.mouse.down(); pg.wait_for_timeout(200); pg.mouse.up(); pg.wait_for_timeout(100)
         rows.append((w, 'incident staging by tap', 0 if pg.evaluate("zoneFit(S.z,WX.dir,MAT[S.def.mat].iso.ft).ok") else 99))
         tap(pg, '[data-r="zonesok"]'); pg.wait_for_timeout(600)

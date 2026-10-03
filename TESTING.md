@@ -32,7 +32,14 @@ Rules this module adds to the platform's (see CLAUDE.md for the platform rules):
 
 - `tests/uw_bot.js` plays an incident through `runAct` only, the handlers behind the buttons, the handles and the map taps, at about 1.2 s per tap on `global.__T`, running `runTick` between taps. Options: `variant`, `route` (good, down, cross), `choice` or `choiceAt:{stepId:kind}`, `binoMiss`, `binoWrong`, `ergWrong`, `hot`, `warm`, `stageDownwind`, `stageCross`, `stageInside`, `notifyMiss`, `notifyExtra`, `notifySkipTeam`, `noTeam`, `dwell` (seconds added after each decision, to reach the Chaos wind shift), `fast`.
 - `tests/zones.js` is the independent zone rule, written from CLAUDE.md, not from `zoneFit`. Distances are judged in whole feet, the number the player sees; one disagreement in 400 came from comparing a fraction of a foot, so the rule says so.
-- `gate`: the facts rule applied to incidents. An incident whose material is unchecked is built and tested but listed as locked; `runStart` refuses it. The tests unlock by stamping `MAT.gasoline.checked` in the harness.
+- `gate`: the facts rule applied to incidents. An incident whose material is unchecked is built and tested but listed as locked; `runStart` refuses it. The test clears `MAT.gasoline.checked` first to prove the lock, since the entry has been checked for real since 0.3.1.
 - `clean`, `mistakes`, `chaos`, `smooth` as listed in CLAUDE.md. The smooth check wraps `innerHTML` on the run screen's containers and counts writes during 10 s of ticks: zero.
 - Browser check: the incident at both widths with a real drag of the hot handle (press, move in eight small steps, release), a tap on the map upwind for staging, the warm nudge buttons until the fit is good, every decision answered by its visible text, the notifications ticked by text, and a 100 on the result screen.
 - Prove it can fail: change `PEN.routeDown` and the downwind test fails; move the staging tap downwind in the browser check and the fit row fails; set a plume half-angle floor above 60° and the side-thinning check fails.
+
+## 0.3.1 checks (added October 3, 2026, Guide 128 checked by Max)
+- `facts`: `MAT.gasoline` carries the three Guide 128 lines Max read (150 ft, 1000 ft large-spill evacuation, 800 m tank fire) and a `checked` stamp naming him, the app and the guide.
+- `home`: the I-75 incident is live and the six incidents still to build stay disabled with a Soon chip.
+- `drills`: the ERG drill asks "UN1203, Gasoline: which guide?" with two distinct wrong guide numbers (padded from nearby guides while gasoline is the only checked material), and asks no guide question when nothing is checked.
+- `mistakes`: layout B adds the downwind evacuation decision; choosing shelter costs 10 and the debrief line reads "Right call: Evacuate the truck stop crosswind, now. The guide says consider downwind evacuation for 1000 feet…".
+- Browser check: the incident now opens from the home list with no unlock hook, the way a phone does. The staging tap scrolls the map back into view first, because the warm nudge taps can scroll the top of the map away at 320 px (that was a harness miss on layout C, not an app bug).
