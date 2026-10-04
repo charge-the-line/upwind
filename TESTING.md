@@ -71,3 +71,10 @@ Rules this module adds to the platform's (see CLAUDE.md for the platform rules):
 ## 0.6.1 checks (added October 4, 2026, Guides 111 and 116P read by Max from the ERG2024 PHMSA web edition PDF)
 - `facts`: vinyl chloride carries Guide 116P (isolate 330 ft, large spill half a mile, tank in fire 1 mile, `poly:true`, no green-table rows) and unknown cargo carries Guide 111 (isolate 330 ft, tank in fire half a mile, no large-spill line); every material in `MAT` is checked.
 - `drills`: the ERG drill asks seven guide questions (vinyl chloride 116P added); unknown cargo has no UN number and gets none; `mats()` lists all eight materials.
+## 0.7.0 checks (added October 4, 2026, the rail car by the siding)
+- `home`: six incidents live, one (the white powder) disabled with Soon.
+- `clean`: rail car, three layouts × three tiers at human pace, each scoring 100 with the right steps (trains first; A elevator and culvert, C crossing and culvert, B water and evac); the map draws a level TANK CAR on the siding with the main line, and I-75 keeps its angled TANKER.
+- `mistakes` (rail car): the through freight let past; the leaking car pulled away by the switch engine; climbing the car to close the valve (−30); the vapor left to the team and the ditch left alone, both named as defensive actions missed; a straight stream on the housing; the elevator crew sheltered beside lit dryer burners; drivers turning around at the crossing; a handline from the engine tank on the burning car; a crew up the ladder under the flame (−30); sheltering inside the fire distance, with the 1600 m line quoted; missed size-up items.
+- Proven able to fail: marking the trains right call as wrong in a scratch copy failed 20 checks.
+- `balance` covers the new decisions automatically.
+- Browser check: the rail car layout A at 390 px and layout B (the fire) at 320 px, played with real taps to 100. 105 rows.
