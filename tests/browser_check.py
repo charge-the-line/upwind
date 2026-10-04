@@ -24,24 +24,25 @@ def incident(pg, w, scn, pre, unlock=None, force=None):   # play an incident wit
     for lab in pg.evaluate("S.def.steps[S.i].items.filter(x=>x.need).map(x=>x.label)"): pg.locator('[data-r="bino"]', has_text=lab).first.click(); pg.wait_for_timeout(80)
     rows.append((w, pre + 'binoculars', pg.evaluate(OVER) + 1000 * pg.evaluate(SMALL))); tap(pg, '[data-r="binook"]'); pg.wait_for_timeout(600)
     ans = pg.evaluate("S.def.steps[S.i].opts.find(o=>o[1]==='good')[0]"); pg.locator('[data-r="erg"]', has_text=ans).first.click(); pg.wait_for_timeout(150); tap(pg, '[data-r="next"]'); pg.wait_for_timeout(600)
-    rows.append((w, pre + 'zones', pg.evaluate(OVER) + 1000 * pg.evaluate(SMALL)))
-    # drag the hot handle outward the way a finger does, then tap the map upwind for staging, then nudge warm with the buttons
-    pg.locator('#uw-svg').scroll_into_view_if_needed(); pg.wait_for_timeout(80)   # a long step text can leave the map above the viewport
-    svg = pg.locator('#uw-svg').bounding_box(); hb = pg.locator('#mh-hot').bounding_box(); cx, cy = svg['x'] + svg['width'] * 150 / 340, svg['y'] + svg['height'] * 140 / 300
-    hx, hy = hb['x'] + hb['width'] / 2, hb['y'] + hb['height'] / 2; dx, dy = hx - cx, hy - cy; d = (dx * dx + dy * dy) ** .5
-    pg.mouse.move(hx, hy); pg.mouse.down(); pg.wait_for_timeout(120)
-    for k in range(1, 25):
-        pg.mouse.move(cx + dx / d * (d + k * 8), cy + dy / d * (d + k * 8)); pg.wait_for_timeout(40)
-        if pg.evaluate("S.z.hot >= MAT[S.def.mat].iso.ft"): break
-    pg.mouse.up(); pg.wait_for_timeout(100)
-    rows.append((w, pre + 'drag hot ring', 0 if pg.evaluate("S.z.hot >= MAT[S.def.mat].iso.ft*0.95 && S.z.hot <= MAT[S.def.mat].iso.ft*2.5") else 99))
-    while pg.evaluate("S.z.warm < S.z.hot+40"): tap(pg, '[data-r="nudge"][data-z="warm"][data-d="25"]')
-    upx, upy = pg.evaluate("(()=>{const v=vec(WX.dir),d=(S.z.warm+40)/S.scale;return [S.R.x+v.x*d,S.R.y+v.y*d];})()")   # a tap upwind, just outside the warm ring
-    pg.locator('#uw-svg').scroll_into_view_if_needed(); pg.wait_for_timeout(80); svg = pg.locator('#uw-svg').bounding_box()   # the nudge taps may have scrolled the top of the map away
-    pg.mouse.move(svg['x'] + svg['width'] * upx / 340, svg['y'] + svg['height'] * upy / 300); pg.mouse.down(); pg.wait_for_timeout(200); pg.mouse.up(); pg.wait_for_timeout(100)
-    rows.append((w, pre + 'staging by tap', 0 if pg.evaluate("zoneFit(S.z,WX.dir,MAT[S.def.mat].iso.ft).ok") else 99))
-    tap(pg, '[data-r="zonesok"]'); pg.wait_for_timeout(600)
-    for _ in range(8):
+    if pg.evaluate("S.def.steps[S.i].k") == 'zones':   # an indoor incident (the white powder) has no zones step
+        rows.append((w, pre + 'zones', pg.evaluate(OVER) + 1000 * pg.evaluate(SMALL)))
+        # drag the hot handle outward the way a finger does, then tap the map upwind for staging, then nudge warm with the buttons
+        pg.locator('#uw-svg').scroll_into_view_if_needed(); pg.wait_for_timeout(80)   # a long step text can leave the map above the viewport
+        svg = pg.locator('#uw-svg').bounding_box(); hb = pg.locator('#mh-hot').bounding_box(); cx, cy = svg['x'] + svg['width'] * 150 / 340, svg['y'] + svg['height'] * 140 / 300
+        hx, hy = hb['x'] + hb['width'] / 2, hb['y'] + hb['height'] / 2; dx, dy = hx - cx, hy - cy; d = (dx * dx + dy * dy) ** .5
+        pg.mouse.move(hx, hy); pg.mouse.down(); pg.wait_for_timeout(120)
+        for k in range(1, 25):
+            pg.mouse.move(cx + dx / d * (d + k * 8), cy + dy / d * (d + k * 8)); pg.wait_for_timeout(40)
+            if pg.evaluate("S.z.hot >= MAT[S.def.mat].iso.ft"): break
+        pg.mouse.up(); pg.wait_for_timeout(100)
+        rows.append((w, pre + 'drag hot ring', 0 if pg.evaluate("S.z.hot >= MAT[S.def.mat].iso.ft*0.95 && S.z.hot <= MAT[S.def.mat].iso.ft*2.5") else 99))
+        while pg.evaluate("S.z.warm < S.z.hot+40"): tap(pg, '[data-r="nudge"][data-z="warm"][data-d="25"]')
+        upx, upy = pg.evaluate("(()=>{const v=vec(WX.dir),d=(S.z.warm+40)/S.scale;return [S.R.x+v.x*d,S.R.y+v.y*d];})()")   # a tap upwind, just outside the warm ring
+        pg.locator('#uw-svg').scroll_into_view_if_needed(); pg.wait_for_timeout(80); svg = pg.locator('#uw-svg').bounding_box()   # the nudge taps may have scrolled the top of the map away
+        pg.mouse.move(svg['x'] + svg['width'] * upx / 340, svg['y'] + svg['height'] * upy / 300); pg.mouse.down(); pg.wait_for_timeout(200); pg.mouse.up(); pg.wait_for_timeout(100)
+        rows.append((w, pre + 'staging by tap', 0 if pg.evaluate("zoneFit(S.z,WX.dir,MAT[S.def.mat].iso.ft).ok") else 99))
+        tap(pg, '[data-r="zonesok"]'); pg.wait_for_timeout(600)
+    for _ in range(12):
         k = pg.evaluate("S?S.def.steps[S.i].k:null")
         if k is None: break
         if k == 'decide':
@@ -77,6 +78,8 @@ with sync_playwright() as p:
         if w == 390: incident(pg, w, 'pool', 'swim club ', force='A')
         if w == 390: incident(pg, w, 'rail', 'rail car ', force='A')
         if w == 320: incident(pg, w, 'rail', 'rail car fire ', force='B')
+        if w == 390: incident(pg, w, 'powder', 'white powder ', force='A')
+        if w == 320: incident(pg, w, 'powder', 'white powder sick ', force='C')
         if w == 390:   # instructor mode: switch on, open the incident, the floating button opens the sheet, an inject lands, freeze and resume, quit
             pg.goto(URL); pg.wait_for_timeout(150); tap(pg, '#b-inst'); tap(pg, '[data-scn="i75"]'); pg.wait_for_timeout(600)
             good = pg.evaluate("S.def.steps[0].routes.find(r=>r.kind==='good').name"); pg.locator('[data-r="route"]', has_text=good).first.click(); pg.wait_for_timeout(600)   # the wind inject waits until the crew is on scene

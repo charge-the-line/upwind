@@ -78,3 +78,11 @@ Rules this module adds to the platform's (see CLAUDE.md for the platform rules):
 - Proven able to fail: marking the trains right call as wrong in a scratch copy failed 20 checks.
 - `balance` covers the new decisions automatically.
 - Browser check: the rail car layout A at 390 px and layout B (the fire) at 320 px, played with real taps to 100. 105 rows.
+## 0.8.0 checks (added October 4, 2026, the white powder and the map labels)
+- **The `inject` section was not in the suite's default list**, so a plain `node tests/run_all.js` skipped the 17 instructor-mode checks (they ran only as `node tests/run_all.js inject`). Found while proving a new check could fail; added to `ALL`. All 17 pass.
+- `home`: all seven incidents live, nothing disabled, no Soon.
+- `clean`: white powder, three layouts × three tiers, each 100 with no zones step and the layout's own decision (A building, B sorting line, C the clerk with symptoms) and Guide 111 named in the debrief; on Chaos a second envelope arrives instead of the wind shift and no zones step is ever re-opened. Every map names its own source: TANKER only on I-75, and each incident's source label printed once (the refill cage, the swim club and the house used to print their label on top of TANKER).
+- `mistakes` (white powder): bagging and carrying the envelope out; trusting a clean 4-gas; opening it to field-test (−30); the air handling left running, named as missed; a fan in the room; keeping the office at their desks; finishing the outgoing bags; leaving the coughing clerk in the room; going in on air to carry the envelope (−30); sending the exposed people home; picking up the envelope in the size-up; the clerk's name over the air.
+- `inject`: indoors only the team delay and the second envelope are offered, outdoors never the second envelope; the second envelope lands at the test step with a clean 100.
+- Proven able to fail: offering the wind inject indoors, putting TANKER back on the pool map, and running the outdoor Chaos wind shift indoors each failed their check.
+- Browser check: the white powder layout A at 390 px and layout C at 320 px, played with real taps to 100; the incident player skips the zones block when an incident has none. 113 rows.
