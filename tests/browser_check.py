@@ -54,6 +54,51 @@ def incident(pg, w, scn, pre, unlock=None, force=None):   # play an incident wit
     pg.wait_for_timeout(800)
     rows.append((w, pre + '(full)', 0 if pg.is_visible('#doneov') and pg.text_content('#done-s') == '100' else 99)); pg.evaluate("localStorage.removeItem('upwind')")
 
+def real_call(pg, w, scn, pre):   # a Real Call played step by step with real taps on visible text, a real drag of the hot ring and a map tap for staging
+    pg.goto(URL); pg.wait_for_timeout(150); tap(pg, '[data-scn="%s"]' % scn); pg.wait_for_timeout(600)
+    rows.append((w, pre + 'briefing', pg.evaluate(OVER) + 1000 * pg.evaluate(SMALL) + (0 if pg.is_hidden('#uw-team') else 99)))
+    for _ in range(30):
+        k = pg.evaluate("S?S.def.steps[S.i].k:null")
+        if k is None: break
+        if k == 'brief': tap(pg, '[data-r="briefok"]'); pg.wait_for_timeout(600)
+        elif k == 'approach':
+            good = pg.evaluate("S.def.steps[S.i].routes.find(r=>r.kind==='good').name"); pg.locator('[data-r="route"]', has_text=good).first.click(); pg.wait_for_timeout(600)
+        elif k == 'decide':
+            sid = pg.evaluate("S.def.steps[S.i].id"); ans = pg.evaluate("S.def.steps[S.i].o.find(o=>o[1]==='good')[0]"); pg.locator('[data-r="opt"]', has_text=re.compile('^' + re.escape(ans) + '$')).first.click(); pg.wait_for_timeout(150)
+            if sid in ('table3', 'shelter'): rows.append((w, pre + sid, pg.evaluate(OVER) + 1000 * pg.evaluate(SMALL)))
+            if pg.evaluate("S.i===0&&!S.teamAt") is False and not pg.evaluate("!!S.teamAt") and pg.is_visible('#uw-team'): tap(pg, '#uw-team'); pg.wait_for_timeout(150)
+            tap(pg, '[data-r="next"]'); pg.wait_for_timeout(600)
+        elif k == 'bino':
+            for lab in pg.evaluate("S.def.steps[S.i].items.filter(x=>x.need).map(x=>x.label)"): pg.locator('[data-r="bino"]', has_text=lab).first.click(); pg.wait_for_timeout(80)
+            rows.append((w, pre + 'binoculars', pg.evaluate(OVER) + 1000 * pg.evaluate(SMALL))); tap(pg, '[data-r="binook"]'); pg.wait_for_timeout(600)
+        elif k == 'erg':
+            ans = pg.evaluate("S.def.steps[S.i].opts.find(o=>o[1]==='good')[0]"); pg.locator('[data-r="erg"]', has_text=ans).first.click(); pg.wait_for_timeout(150); tap(pg, '[data-r="next"]'); pg.wait_for_timeout(600)
+        elif k == 'zones':
+            rows.append((w, pre + 'zones', pg.evaluate(OVER) + 1000 * pg.evaluate(SMALL)))
+            pg.locator('#uw-svg').scroll_into_view_if_needed(); pg.wait_for_timeout(80)
+            svg = pg.locator('#uw-svg').bounding_box(); hb = pg.locator('#mh-hot').bounding_box(); cx, cy = svg['x'] + svg['width'] * 150 / 340, svg['y'] + svg['height'] * 140 / 300
+            hx, hy = hb['x'] + hb['width'] / 2, hb['y'] + hb['height'] / 2; ux, uy = pg.evaluate("(()=>{const v=vec((WX.dir+135)%360);return [v.x,v.y];})()")   # the hot handle's own diagonal
+            pg.mouse.move(hx, hy); pg.mouse.down(); pg.wait_for_timeout(120)
+            for j in range(1, 60):
+                pg.mouse.move(hx + ux * j * 4, hy + uy * j * 4); pg.wait_for_timeout(40)
+                if pg.evaluate("S.z.hot >= isoFt()"): break
+            pg.mouse.up(); pg.wait_for_timeout(100)
+            rows.append((w, pre + 'drag hot ring', 0 if pg.evaluate("S.z.hot >= isoFt()*0.95 && S.z.hot <= isoFt()*2.5") else 99))
+            nd = pg.evaluate("String(S.def.nudge||25)")
+            while pg.evaluate("S.z.warm < S.z.hot+40"): tap(pg, '[data-r="nudge"][data-z="warm"][data-d="%s"]' % nd)
+            upx, upy = pg.evaluate("(()=>{const v=vec(WX.dir),d=(S.z.warm+40)/S.scale;return [S.R.x+v.x*d,S.R.y+v.y*d];})()")
+            pg.locator('#uw-svg').scroll_into_view_if_needed(); pg.wait_for_timeout(80); svg = pg.locator('#uw-svg').bounding_box()
+            pg.mouse.move(svg['x'] + svg['width'] * upx / 340, svg['y'] + svg['height'] * upy / 300); pg.mouse.down(); pg.wait_for_timeout(200); pg.mouse.up(); pg.wait_for_timeout(100)
+            rows.append((w, pre + 'staging by tap', 0 if pg.evaluate("zoneFit(S.z,WX.dir,isoFt()).ok") else 99))
+            tap(pg, '[data-r="zonesok"]'); pg.wait_for_timeout(600)
+        elif k == 'notify':
+            for lab in pg.evaluate("S.def.steps[S.i].items.filter(x=>x.need).map(x=>x.label)"): pg.locator('[data-r="chk"]', has_text=lab).first.click(); pg.wait_for_timeout(80)
+            tap(pg, '[data-r="notifyok"]'); pg.wait_for_timeout(600)
+        else: break
+    pg.wait_for_timeout(800)
+    rows.append((w, pre + '(full)', 0 if pg.is_visible('#doneov') and pg.text_content('#done-s') == '100' and 'What happened in Graniteville' in pg.text_content('#done-b') else 99))
+    rows.append((w, pre + 'debrief', pg.evaluate(OVER) + 1000 * pg.evaluate(SMALL))); pg.evaluate("localStorage.removeItem('upwind')")
+
 with sync_playwright() as p:
     b = p.chromium.launch()
     for w in (320, 390):
@@ -80,6 +125,7 @@ with sync_playwright() as p:
         if w == 320: incident(pg, w, 'rail', 'rail car fire ', force='B')
         if w == 390: incident(pg, w, 'powder', 'white powder ', force='A')
         if w == 320: incident(pg, w, 'powder', 'white powder sick ', force='C')
+        real_call(pg, w, 'grani', 'graniteville ')
         if w == 390:   # instructor mode: switch on, open the incident, the floating button opens the sheet, an inject lands, freeze and resume, quit
             pg.goto(URL); pg.wait_for_timeout(150); tap(pg, '#b-inst'); tap(pg, '[data-scn="i75"]'); pg.wait_for_timeout(600)
             good = pg.evaluate("S.def.steps[0].routes.find(r=>r.kind==='good').name"); pg.locator('[data-r="route"]', has_text=good).first.click(); pg.wait_for_timeout(600)   # the wind inject waits until the crew is on scene

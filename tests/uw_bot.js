@@ -8,12 +8,13 @@ function play(id,tier,o={}){global.__T=1000;const b=boot(Object.assign({upwind:J
   const fired=new Set();
   while(api.S()&&g++<80){const S=api.S(),s=S.def.steps[S.i];if(!s)break;out.steps.push(s.k+(s.id?':'+s.id:''));
     (o.injects||[]).forEach((j,n)=>{if(!fired.has(n)&&(j.at===s.k||j.at===s.id)){fired.add(n);api.instOpen();adv(j.hold||2);out.injected=(out.injected||[]).concat(api.inject(j.id));api.instClose();}});
+    if(s.k==='brief'){tap({r:'briefok'});continue;}
     if(s.k==='approach'){const want=o.route||'good';const i=s.routes.findIndex(r=>r.kind===want);tap({r:'route',i:String(i)});continue;}
-    if(s.k==='decide'){let kind=o.choice||'good';if(o.choiceAt&&o.choiceAt[s.id])kind=o.choiceAt[s.id];let i=s.o.findIndex(x=>x[1]===kind);if(i<0)i=s.o.findIndex(x=>x[1]==='good');tap({r:'opt',i:String(i)});if(!teamCalled&&!o.noTeam&&S.i>=2){tap({r:'team'});teamCalled=true;}if(o.dwell)adv(o.dwell);tap({r:'next'});continue;}
+    if(s.k==='decide'){let kind=o.choice||'good';if(o.choiceAt&&o.choiceAt[s.id])kind=o.choiceAt[s.id];let i=s.o.findIndex(x=>x[1]===kind);if(i<0)i=s.o.findIndex(x=>x[1]==='good');if(o.pick&&o.pick[s.id])i=o.pick[s.id](s.o);tap({r:'opt',i:String(i)});if(!teamCalled&&!o.noTeam&&S.i>=2){tap({r:'team'});teamCalled=true;}if(o.dwell)adv(o.dwell);tap({r:'next'});continue;}
     if(s.k==='bino'){s.items.forEach((it,i)=>{if(it.need&&!o.binoMiss)tap({r:'bino',i:String(i)});if(!it.need&&o.binoWrong)tap({r:'bino',i:String(i)});});tap({r:'binook'});continue;}
     if(s.k==='erg'){const i=s.opts.findIndex(x=>x[1]===(o.ergWrong?'bad':'good'));tap({r:'erg',i:String(i)});tap({r:'next'});continue;}
-    if(s.k==='zones'){const iso=api.MAT[S.def.mat].iso.ft;const wantHot=o.hot!==undefined?o.hot:iso+10,wantWarm=o.warm!==undefined?o.warm:wantHot+60;
-      while(S.z.hot<wantHot)tap({r:'nudge',z:'hot',d:'25'});while(S.z.hot>wantHot+24)tap({r:'nudge',z:'hot',d:'-25'});while(S.z.warm<wantWarm)tap({r:'nudge',z:'warm',d:'25'});
+    if(s.k==='zones'){const iso=S.def.isoFt||api.MAT[S.def.mat].iso.ft,nd=S.def.nudge||25;const wantHot=o.hot!==undefined?o.hot:iso+10,wantWarm=o.warm!==undefined?o.warm:wantHot+60;
+      while(S.z.hot<wantHot)tap({r:'nudge',z:'hot',d:String(nd)});while(S.z.hot>wantHot+nd-1)tap({r:'nudge',z:'hot',d:String(-nd)});const ww=o.warm!==undefined?wantWarm:Math.max(wantWarm,S.z.hot+60);while(S.z.warm<ww)tap({r:'nudge',z:'warm',d:String(nd)});
       const dir=o.stageDownwind?(api.WX.dir+180)%360:o.stageCross?(api.WX.dir+90)%360:api.WX.dir;const v=api.vec(dir);const dist=(o.stageInside?S.z.warm*.6:S.z.warm+40)/S.scale;tap({r:'stage',x:String(S.R.x+v.x*dist),y:String(S.R.y+v.y*dist)});
       if(o.waitBeforeZones)adv(o.waitBeforeZones);tap({r:'zonesok'});continue;}
     if(s.k==='notify'){s.items.forEach((it,i)=>{if(it.need&&!o.notifyMiss&&!(o.notifySkipTeam&&it.id==='team'))tap({r:'chk',i:String(i)});if(!it.need&&o.notifyExtra)tap({r:'chk',i:String(i)});});tap({r:'notifyok'});continue;}
