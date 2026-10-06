@@ -96,7 +96,7 @@ def real_call(pg, w, scn, pre):   # a Real Call played step by step with real ta
             tap(pg, '[data-r="notifyok"]'); pg.wait_for_timeout(600)
         else: break
     pg.wait_for_timeout(800)
-    rows.append((w, pre + '(full)', 0 if pg.is_visible('#doneov') and pg.text_content('#done-s') == '100' and 'What happened in Graniteville' in pg.text_content('#done-b') else 99))
+    rows.append((w, pre + '(full)', 0 if pg.is_visible('#doneov') and pg.text_content('#done-s') == '100' and 'What happened' in pg.text_content('#done-b') else 99))
     rows.append((w, pre + 'debrief', pg.evaluate(OVER) + 1000 * pg.evaluate(SMALL))); pg.evaluate("localStorage.removeItem('upwind')")
 
 with sync_playwright() as p:
@@ -126,6 +126,7 @@ with sync_playwright() as p:
         if w == 390: incident(pg, w, 'powder', 'white powder ', force='A')
         if w == 320: incident(pg, w, 'powder', 'white powder sick ', force='C')
         real_call(pg, w, 'grani', 'graniteville ')
+        real_call(pg, w, 'king', 'kingman ')
         if w == 390:   # instructor mode: switch on, open the incident, the floating button opens the sheet, an inject lands, freeze and resume, quit
             pg.goto(URL); pg.wait_for_timeout(150); tap(pg, '#b-inst'); tap(pg, '[data-scn="i75"]'); pg.wait_for_timeout(600)
             good = pg.evaluate("S.def.steps[0].routes.find(r=>r.kind==='good').name"); pg.locator('[data-r="route"]', has_text=good).first.click(); pg.wait_for_timeout(600)   # the wind inject waits until the crew is on scene
