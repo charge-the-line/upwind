@@ -145,7 +145,7 @@ button.on2{background:#1f6b45!important;border-color:#2f9e66!important;color:#ff
 <div class="overlay hidden" id="infoov" style="z-index:15"><div class="box"><div id="info-b"></div><button class="go" id="info-close" style="width:100%;margin-top:10px">Close</button></div></div>
 <script>
 /* =================== core =================== */
-const APP_VERSION='0.11.0';
+const APP_VERSION='0.11.1';
 /* Screen wake lock (Milestone 1): on only while an incident runs. */
 const WAKE={s:null,want:false};
 function keepAwake(on){WAKE.want=!!on;const wl=(typeof navigator!=='undefined')&&navigator.wakeLock;if(!wl||!wl.request)return;
@@ -184,7 +184,7 @@ const METER={o2lo:19.5,o2hi:23.5,lel:10,co:35,h2s:10};
 const PLAN={
  drills:[['placard','Placard ID','Class, division and what the colors mean'],['erg','ERG lookup','UN number or name to guide and isolation distance'],['container','Container recognition','Tankers, pressure tanks, rail cars, totes, cylinders, nurse tanks'],['nfpa704','NFPA 704','Read the diamond at a fixed facility'],['zones','Zone setup','Wind plus the ERG line: which picture is right'],['meter','Meter interpretation','Readings to action, and when the meter is lying'],['shelter','Shelter or evacuate','Short situations, one right call'],['ppe','PPE limits','What structural gear and SCBA can and cannot do']],
  scn:[['i75','Tanker on its side, I-75','Gasoline toward a storm drain · three layouts, three tiers'],['nurse','Nurse tank on a gravel road','Anhydrous ammonia in sugar beet country · three layouts, three tiers'],['propane','Propane at the refill cage','A cylinder venting beside the bulk tank · three layouts, three tiers'],['pool','Chlorine at the swim club','A cylinder hissing in the pump room · three layouts, three tiers'],['house','Something in the house','The meter tells the story: CO or gas · three layouts, three tiers'],['rail','Rail car by the siding','A pressure car with a frosted valve · three layouts, three tiers'],['powder','White powder in an envelope','Don\'t touch, don\'t test, isolate · three layouts, three tiers']],
- real:[['grani','Graniteville, South Carolina, 2005','Chlorine in the valley at 2:39 a.m. · the published record, three tiers'],['king','Kingman, Arizona, 1973','A propane tank car in fire · in memory of eleven firefighters'],['epal','East Palestine, Ohio, 2023','Vinyl chloride in a derailment fire · the train list and the P']]};
+ real:[['grani','Graniteville, South Carolina, 2005','Chlorine in the valley at 2:39 a.m. · the published record, three tiers'],['king','Kingman, Arizona, 1973','A propane tank car in fire · in memory of eleven firefighters'],['epal','East Palestine, Ohio, 2023','Vinyl chloride in a derailment fire · getting the facts to command']]};
 const ACTS=[['lesson','lesson'],...PLAN.drills.map(d=>['drill',d[0]]),...PLAN.scn.map(s=>['scenario',s[0]]),...PLAN.real.map(s=>['scenario',s[0]])];
 function readiness(){const R=load().runs||[];const best={};R.forEach(r=>{const k=r.kind+':'+r.id;best[k]=Math.max(best[k]||0,+r.score||0);});const done=ACTS.filter(([k,i])=>best[k+':'+i]!==undefined).length;return {done,total:ACTS.length,pct:Math.round(done/ACTS.length*100),best};}
 function homeRender(){const R=readiness();$('erg-ed').textContent=ERG_ED;

@@ -268,4 +268,7 @@ if(want.includes('real')){const {play}=require('./uw_bot.js');const {boot}=requi
   {const r=play('epal',1,{hot:330});report('real','East Palestine: an isolation ring at the leak distance (330 ft) instead of the mile costs points',r.ok&&r.score<100&&/hot zone short of the ERG distance/.test(r.body),`score ${r.score}`);}
   {const {api,els}=boot();global.__T=1000;api.setInst(true);api.runStart('epal');api.S().i=4;const off=api.INJECTS.filter(x=>x.ok()).map(x=>x.id);const map=els['uw-map'].innerHTML;api.runAct({r:'quit'});report('real','East Palestine: no made-up driver inject; the map names the derailment, the main line, the homes and the village',!off.includes('driver')&&/>DERAILMENT</.test(map)&&/>MAIN LINE</.test(map)&&/>HOMES</.test(map)&&/>EAST PALESTINE</.test(map),off.join(','));}}
 
+{const {api}=boot();const subs=[...api.PLAN.scn,...api.PLAN.real].map(x=>x[2]);const cut=subs.filter(s=>/\b(the|a|an|and|of|to)\s+\S{1,2}$|\b[A-Z]$/.test(s));
+ report('home','every incident and Real Call subtitle reads as a whole phrase (Max read "the train list and the P" as cut off)',cut.length===0&&api.PLAN.real.find(x=>x[0]==='epal')[2]==='Vinyl chloride in a derailment fire · getting the facts to command',cut.join(' | '));}
+
 console.log(`\n${n-failed}/${n} checks passed · ${Math.round((Date.now()-T0)/1000)} s`);process.exit(failed?1:0);
