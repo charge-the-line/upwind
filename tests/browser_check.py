@@ -65,7 +65,7 @@ def real_call(pg, w, scn, pre):   # a Real Call played step by step with real ta
             good = pg.evaluate("S.def.steps[S.i].routes.find(r=>r.kind==='good').name"); pg.locator('[data-r="route"]', has_text=good).first.click(); pg.wait_for_timeout(600)
         elif k == 'decide':
             sid = pg.evaluate("S.def.steps[S.i].id"); ans = pg.evaluate("S.def.steps[S.i].o.find(o=>o[1]==='good')[0]"); pg.locator('[data-r="opt"]', has_text=re.compile('^' + re.escape(ans) + '$')).first.click(); pg.wait_for_timeout(150)
-            if sid in ('table3', 'shelter'): rows.append((w, pre + sid, pg.evaluate(OVER) + 1000 * pg.evaluate(SMALL)))
+            if sid in ('table3', 'shelter', 'consist', 'monday'): rows.append((w, pre + sid, pg.evaluate(OVER) + 1000 * pg.evaluate(SMALL)))
             if pg.evaluate("S.i===0&&!S.teamAt") is False and not pg.evaluate("!!S.teamAt") and pg.is_visible('#uw-team'): tap(pg, '#uw-team'); pg.wait_for_timeout(150)
             tap(pg, '[data-r="next"]'); pg.wait_for_timeout(600)
         elif k == 'bino':
@@ -127,6 +127,7 @@ with sync_playwright() as p:
         if w == 320: incident(pg, w, 'powder', 'white powder sick ', force='C')
         real_call(pg, w, 'grani', 'graniteville ')
         real_call(pg, w, 'king', 'kingman ')
+        real_call(pg, w, 'epal', 'east palestine ')
         if w == 390:   # instructor mode: switch on, open the incident, the floating button opens the sheet, an inject lands, freeze and resume, quit
             pg.goto(URL); pg.wait_for_timeout(150); tap(pg, '#b-inst'); tap(pg, '[data-scn="i75"]'); pg.wait_for_timeout(600)
             good = pg.evaluate("S.def.steps[0].routes.find(r=>r.kind==='good').name"); pg.locator('[data-r="route"]', has_text=good).first.click(); pg.wait_for_timeout(600)   # the wind inject waits until the crew is on scene
