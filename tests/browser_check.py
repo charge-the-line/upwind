@@ -54,9 +54,11 @@ def incident(pg, w, scn, pre, unlock=None, force=None):   # play an incident wit
     pg.wait_for_timeout(800)
     rows.append((w, pre + '(full)', 0 if pg.is_visible('#doneov') and pg.text_content('#done-s') == '100' else 99)); pg.evaluate("localStorage.removeItem('upwind')")
 
-def real_call(pg, w, scn, pre):   # a Real Call played step by step with real taps on visible text, a real drag of the hot ring and a map tap for staging
-    pg.goto(URL); pg.wait_for_timeout(150); tap(pg, '[data-scn="%s"]' % scn); pg.wait_for_timeout(600)
-    rows.append((w, pre + 'briefing', pg.evaluate(OVER) + 1000 * pg.evaluate(SMALL) + (0 if pg.is_hidden('#uw-team') else 99)))
+def real_call(pg, w, scn, pre, force=None, done_text='What happened'):   # a Real Call played step by step with real taps on visible text, a real drag of the hot ring and a map tap for staging
+    pg.goto(URL); pg.wait_for_timeout(150)
+    if force: pg.evaluate("window.FORCE_V={%s:'%s'}" % (scn, force))
+    tap(pg, '[data-scn="%s"]' % scn); pg.wait_for_timeout(600)
+    rows.append((w, pre + ('approach' if force else 'briefing'), pg.evaluate(OVER) + 1000 * pg.evaluate(SMALL) + (0 if pg.is_hidden('#uw-team') else 99)))
     for _ in range(30):
         k = pg.evaluate("S?S.def.steps[S.i].k:null")
         if k is None: break
@@ -96,7 +98,7 @@ def real_call(pg, w, scn, pre):   # a Real Call played step by step with real ta
             tap(pg, '[data-r="notifyok"]'); pg.wait_for_timeout(600)
         else: break
     pg.wait_for_timeout(800)
-    rows.append((w, pre + '(full)', 0 if pg.is_visible('#doneov') and pg.text_content('#done-s') == '100' and 'What happened' in pg.text_content('#done-b') else 99))
+    rows.append((w, pre + '(full)', 0 if pg.is_visible('#doneov') and pg.text_content('#done-s') == '100' and done_text in pg.text_content('#done-b') else 99))
     rows.append((w, pre + 'debrief', pg.evaluate(OVER) + 1000 * pg.evaluate(SMALL))); pg.evaluate("localStorage.removeItem('upwind')")
 
 with sync_playwright() as p:
@@ -128,6 +130,8 @@ with sync_playwright() as p:
         real_call(pg, w, 'grani', 'graniteville ')
         real_call(pg, w, 'king', 'kingman ')
         real_call(pg, w, 'epal', 'east palestine ')
+        if w == 390: real_call(pg, w, 'liion', 'battery car ', force='A', done_text='After an electric car fire'); real_call(pg, w, 'liion', 'battery e-bike ', force='B', done_text='A battery fire indoors')
+        if w == 320: real_call(pg, w, 'liion', 'battery trailer ', force='C', done_text='Why not like Kingman')
         if w == 390:   # instructor mode: switch on, open the incident, the floating button opens the sheet, an inject lands, freeze and resume, quit
             pg.goto(URL); pg.wait_for_timeout(150); tap(pg, '#b-inst'); tap(pg, '[data-scn="i75"]'); pg.wait_for_timeout(600)
             good = pg.evaluate("S.def.steps[0].routes.find(r=>r.kind==='good').name"); pg.locator('[data-r="route"]', has_text=good).first.click(); pg.wait_for_timeout(600)   # the wind inject waits until the crew is on scene
