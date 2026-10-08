@@ -110,3 +110,6 @@ Rules this module adds to the platform's (see CLAUDE.md for the platform rules):
 - A date bomb fixed: the Real Calls progress check used a run dated October 6, so its chip read Due the next day; it now uses today's date.
 - Proven able to fail: making a never option cost 10 failed 5 checks; marking ventilation before knockdown good failed the ventilation check; changing the trailer-in-fire distance failed the facts and zones checks.
 - Browser check: the car (390 px) and the e-bike (390 px) and the trailer (320 px), every step with real taps on visible text, a real drag of the ring on the outdoor layouts, to a 100 with each layout's debrief record.
+
+## 0.12.1 checks (October 8, 2026)
+- `liion`: the deep link `?scn=liion&v=A` opens the lithium-ion fire on Layout A; an unknown layout opens a random one; an unknown incident opens nothing; the layout pin does not stick.
