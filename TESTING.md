@@ -129,3 +129,7 @@ Rules this module adds to the platform's (see CLAUDE.md for the platform rules):
 ## Truth and counts (final sweep milestone 3, October 10, 2026)
 - `home`: no build-out copy left ("incidents coming next", "Arrives with the first incidents", "will quote … once checked").
 - `syntax`: the docs guard (CLAUDE.md "Current version" equals `APP_VERSION`; README.txt names `preconnect-core.js` and `fonts/`).
+
+## 0.14.0 checks (added October 10, 2026, final sweep milestone 5, one voice)
+
+- `voice`: Start on a Real Call briefing and Stop and go back in the run header; Again · Home · Next on every result, where `nextOf` walks the home list's order and skips a locked incident (the lesson leads to the placard drill; the last Real Call has no Next and Home becomes the primary button); a quick drill's Next opens the next drill; ◂ Preconnect · Feedback under every result; tier help from the core; the per-department-SOP chip on the lithium-ion record's three general-guidance blocks; About ends with the shared version line; My progress reads and writes the hub profile.
