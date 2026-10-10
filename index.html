@@ -90,28 +90,25 @@ button.on2{background:#1f6b45!important;border-color:#2f9e66!important;color:#ff
 <div id="pc-drill" class="pc-drillbar hidden" data-hub="../"></div>
 <div id="home">
   <div class="flex" style="margin:0 0 8px"><a href="../" style="display:inline-flex;align-items:center;min-height:44px;font-family:'Saira Condensed';font-size:15px;font-weight:600;letter-spacing:1px;color:#ff8a3d;text-decoration:none">◂ PRECONNECT</a><div class="sp"></div><a href="../feedback.html?from=uw" style="display:inline-flex;align-items:center;min-height:44px;font-size:14px;font-weight:700;color:var(--soft);text-decoration:none;margin-right:12px">Feedback</a><button class="gear" id="h-set">Settings</button></div>
-  <div class="top"><div><div class="brand" style="font-size:34px;letter-spacing:3px">UPWIND</div><h1 style="font-size:19px;font-weight:400;font-family:'Atkinson Hyperlegible',system-ui,sans-serif;margin-top:2px">Upwind, uphill, upstream.</h1></div></div>
+  <div class="top"><div><div class="brand" style="font-size:34px;letter-spacing:3px">UPWIND</div><h1 style="font-size:19px;font-weight:400;font-family:'Atkinson Hyperlegible',system-ui,sans-serif;margin-top:2px">Upwind, uphill, upstream. <span class="ver" style="font-size:15px;color:var(--soft)">v0.13.0</span></h1></div></div>
   <div class="card rdy" id="rdy"><div class="flex"><div><div class="small">Your readiness</div><b id="rdy-t" style="display:block;font-family:'Saira Condensed';font-size:22px;line-height:1.05"></b><div class="small" id="rdy-s"></div></div><div class="sp"></div><div class="num" id="rdy-n"></div></div><div class="bar" style="margin-top:10px"><div id="rdy-bar" style="transition:width .6s ease-out"></div></div></div>
   <div class="card"><div class="small">What this is</div><p style="margin:4px 0 0;font-size:15px;line-height:1.45">Hazmat practice at the Awareness and Operations level: see it from a distance, look it up, set the zones, read the meter, protect people, and know when the right call is <b>isolate, deny entry, call the hazmat team</b>. Built around the <b id="erg-ed"></b> workflow. <b>On a real call, use your department's current ERG or the PHMSA ERG app.</b></p></div>
-  <div class="sec">1 · Learn</div>
   <button class="scen" id="h-learn"><span class="chip dim" id="chip-lesson">—</span><b>The lesson</b><span>12 short slides with a check each: recognition, placards, containers, the ERG, zones, PPE limits, meters, defensive actions, decon, notifications, handoff</span></button>
-  <div class="sec">2 · Quick drills</div>
-  <div id="drills"></div>
-  <div class="sec">3 · Incidents</div>
-  <div id="incidents"></div>
-  <div class="sec">4 · Real Calls</div>
-  <p class="stat" style="margin:0 0 6px">Published incidents, told for the crews who come next. One layout each, true to the record; Chaos plays like Recall.</p>
-  <div id="realcalls"></div>
+  <div class="row" style="margin:10px 0 12px"><button id="h-drills">Quick drills</button><button id="h-prog">My progress</button><button id="h-ref">Pocket reference</button><button id="h-about">About this app</button></div>
+  <div class="sec">Difficulty</div>
   <div class="tiers"><button data-tier="0">Guided</button><button data-tier="1">Recall</button><button data-tier="2">Chaos</button></div>
   <p class="stat" id="tierhelp" style="margin:0 0 10px"></p>
   <div class="sec">Drill night</div>
   <button id="b-inst" style="width:100%;margin-bottom:8px">Instructor mode: off</button>
   <p class="stat" style="margin:0 0 6px">Live injects (a wind shift, a second container, a symptomatic bystander, a meter alarm) and a freeze while an incident runs. On by itself during a Drill Night.</p>
-  <div class="sec">More</div>
-  <div class="row"><button id="h-ref">Pocket reference</button><button id="h-prog">My progress</button></div>
-  <button id="h-about" style="width:100%;margin-top:6px">About this app</button>
+  <div class="sec">Incidents</div>
+  <div id="incidents"></div>
+  <div class="sec">Real Calls</div>
+  <p class="stat" style="margin:0 0 6px">Published incidents, told for the crews who come next. One layout each, true to the record; Chaos plays like Recall.</p>
+  <div id="realcalls"></div>
   <p class="legal">A practice tool. It does not replace an official course, a department's procedures, or the current Emergency Response Guidebook, and it does not issue certification. Operations-level responders act defensively, from outside the hazard, and call a hazmat team for anything more. Not affiliated with or endorsed by PHMSA, the NFPA, or any hazmat team.</p>
 </div>
+<div class="overlay hidden" id="drillpick" style="z-index:11"><div class="box"><h2 style="margin:0 0 8px">Quick drills</h2><p class="stat" style="margin:0 0 10px">Eight questions a run, keys computed from the tables. Due and Again chips follow the spacing.</p><div id="drills"></div><button class="go" id="dp-close" style="width:100%;margin-top:10px">Close</button></div></div>
 <div class="overlay hidden" id="runov" style="z-index:12"><div class="box" id="run-box">
   <div class="runhdr"><div><b id="run-title"></b><p class="stat" id="run-sub"></p></div><span class="clock" id="run-clock">0:00</span><button data-r="quit" style="padding:8px 10px">Quit</button></div>
   <div id="uw-map"></div>
@@ -145,7 +142,7 @@ button.on2{background:#1f6b45!important;border-color:#2f9e66!important;color:#ff
 <div class="overlay hidden" id="infoov" style="z-index:15"><div class="box"><div id="info-b"></div><button class="go" id="info-close" style="width:100%;margin-top:10px">Close</button></div></div>
 <script>
 /* =================== core =================== */
-const APP_VERSION='0.12.6';
+const APP_VERSION='0.13.0';
 /* Screen wake lock (Milestone 1): on only while an incident runs. */
 const WAKE={s:null,want:false};
 function keepAwake(on){WAKE.want=!!on;const wl=(typeof navigator!=='undefined')&&navigator.wakeLock;if(!wl||!wl.request)return;
@@ -197,7 +194,7 @@ function homeRender(){const R=readiness();$('erg-ed').textContent=ERG_ED;
   const t=`${R.done} of ${R.total} activities`;if($('rdy-t').textContent!==t)$('rdy-t').textContent=t;
   const sub=R.done?`${ndue?ndue+' due for review · ':''}${TIER===0?'Guided':TIER===1?'Recall':'Chaos'} mode`:'Start with the lesson, then a drill a day. Your best scores show up here.';if($('rdy-s').textContent!==sub)$('rdy-s').textContent=sub;
   const n=R.pct+'%';if($('rdy-n').textContent!==n)$('rdy-n').textContent=n;const bar=$('rdy-bar');if(bar&&bar.style)bar.style.width=R.pct+'%';}
-function showHome(){keepAwake(false);['infoov','lessonov','quizov','doneov','runov'].forEach(i=>$(i).classList.add('hidden'));document.querySelectorAll('[data-tier]').forEach(b=>b.classList.toggle('on',+b.dataset.tier===TIER));$('tierhelp').textContent=['Guided: the ERG distances are drawn on the map and the next step is named.','Recall: no hints. You set the zones and pick the actions.','Chaos: Recall plus a wind shift, a second container, a sensor fault, a crowd.'][TIER];homeRender();}
+function showHome(){keepAwake(false);['infoov','lessonov','quizov','doneov','runov','drillpick'].forEach(i=>$(i).classList.add('hidden'));document.querySelectorAll('[data-tier]').forEach(b=>b.classList.toggle('on',+b.dataset.tier===TIER));$('tierhelp').textContent=['Guided: the ERG distances are drawn on the map and the next step is named.','Recall: no hints. You set the zones and pick the actions.','Chaos: Recall plus a wind shift, a second container, a sensor fault, a crowd.'][TIER];homeRender();}
 document.querySelectorAll('[data-tier]').forEach(b=>b.onclick=()=>{TIER=+b.dataset.tier;showHome();});
 /* =================== reference, about, progress =================== */
 $('h-ref').onclick=()=>info(`<h2>Pocket reference</h2>
@@ -354,7 +351,8 @@ function drillStart(id){const D=DRILLS[id];if(!D)return;keepAwake(true);pca('beg
     onDone:sc=>{pca('end',pca('bkt',sc));record('drill',id,sc);},onQuit:()=>{pca('abandon');$('quizov').classList.add('hidden');QZ=null;showHome();}});}
 function quizAct(ds){const a=ds.q;if(a==='again'){const id=QZ.id;drillStart(id);return;}pcQuizAct(QZ,ds);}
 $('qz-body').onclick=e=>{const b=e.target.closest&&e.target.closest('[data-q]');if(b)quizAct(b.dataset);};$('qz-foot').onclick=$('qz-body').onclick;
-$('drills').onclick=e=>{const b=e.target.closest&&e.target.closest('[data-drill]');if(b&&!b.disabled)drillStart(b.dataset.drill);};
+$('drills').onclick=e=>{const b=e.target.closest&&e.target.closest('[data-drill]');if(b&&!b.disabled){$('drillpick').classList.add('hidden');drillStart(b.dataset.drill);}};
+$('h-drills').onclick=()=>{$('drillpick').classList.remove('hidden');$('drillpick').scrollTop=0;};$('dp-close').onclick=()=>$('drillpick').classList.add('hidden');
 /* =================== incident engine (U2) ===================
    One SVG map built once per run; the tick only changes attributes and text. Wind, plume, meter and exposure run on real
    seconds. Zones are set with the handles, the nudge buttons or a tap, all through runAct, so bots use the same controls. */

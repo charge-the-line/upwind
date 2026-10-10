@@ -112,11 +112,11 @@ with sync_playwright() as p:
         good = pg.evaluate("LESSON[LS.i].o.find(o=>o[1]==='good')[0]"); pg.locator('[data-l="ans"]', has_text=re.compile('^' + re.escape(good) + '$')).first.click(); pg.wait_for_timeout(120)
         tap(pg, '#l-next'); pg.wait_for_timeout(150); rows.append((w, 'lesson slide 2', pg.evaluate(OVER) + 1000 * pg.evaluate(SMALL) + (0 if pg.evaluate('LS.i') == 1 else 99))); tap(pg, '[data-l="quit"]')
         for did in ('placard', 'erg', 'container', 'nfpa704', 'zones', 'meter', 'shelter', 'ppe'):
-            pg.goto(URL); pg.wait_for_timeout(150); tap(pg, f'[data-drill="{did}"]'); pg.wait_for_timeout(150)
+            pg.goto(URL); pg.wait_for_timeout(150); tap(pg, '#h-drills'); pg.wait_for_timeout(150); tap(pg, f'[data-drill="{did}"]'); pg.wait_for_timeout(150)
             ans = pg.evaluate("QZ.qs[QZ.i].a"); pg.locator('[data-q="ans"]', has_text=re.compile('^' + re.escape(ans) + '$')).first.click(); pg.wait_for_timeout(120)
             rows.append((w, 'drill ' + did, pg.evaluate(OVER) + 1000 * pg.evaluate(SMALL) + (0 if pg.evaluate('QZ.right') == 1 else 99)))
         if w == 390:   # one drill to the end with real taps on the right answers, found by their visible text
-            pg.goto(URL); pg.wait_for_timeout(150); tap(pg, '[data-drill="meter"]')
+            pg.goto(URL); pg.wait_for_timeout(150); tap(pg, '#h-drills'); pg.wait_for_timeout(150); tap(pg, '[data-drill="meter"]')
             for _ in range(8):
                 ans = pg.evaluate("QZ.qs[QZ.i].a"); pg.locator('[data-q="ans"]', has_text=re.compile('^' + re.escape(ans) + '$')).first.click(); pg.wait_for_timeout(100); tap(pg, '[data-q="next"]'); pg.wait_for_timeout(100)
             rows.append((w, 'drill meter (full)', 0 if pg.evaluate('QZ.score') == 100 and pg.evaluate("JSON.parse(localStorage.getItem('upwind')).runs.length") >= 1 else 99)); pg.evaluate("localStorage.removeItem('upwind')")
