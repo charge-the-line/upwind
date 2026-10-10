@@ -145,7 +145,7 @@ button.on2{background:#1f6b45!important;border-color:#2f9e66!important;color:#ff
 <div class="overlay hidden" id="infoov" style="z-index:15"><div class="box"><div id="info-b"></div><button class="go" id="info-close" style="width:100%;margin-top:10px">Close</button></div></div>
 <script>
 /* =================== core =================== */
-const APP_VERSION='0.12.3';
+const APP_VERSION='0.12.4';
 /* Screen wake lock (Milestone 1): on only while an incident runs. */
 const WAKE={s:null,want:false};
 function keepAwake(on){WAKE.want=!!on;const wl=(typeof navigator!=='undefined')&&navigator.wakeLock;if(!wl||!wl.request)return;
@@ -890,6 +890,8 @@ $('b-inst').onclick=()=>{INST=!INST;const p=load();p.inst=INST;save(p);instSync(
 /* =================== boot =================== */
 if('serviceWorker' in navigator&&location.protocol==='https:')window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 applySettings();settingsBind();INST=!!load().inst;pcDrillBind();showHome();instSync();setInterval(runTick,150);
+/* rule 15: the incident's real clocks (exposure, the wind shift, the tap guard) stop while the screen is off (the instructor's own freeze is left alone) */
+pcOnPause(()=>{if(S&&!INSTHOLD&&$('instov').classList.contains('hidden'))freezeRun();},()=>{if(S&&!INSTHOLD&&$('instov').classList.contains('hidden')&&S.frozenAt!==null){thawRun();now('<b>Paused</b> while the screen was off. Pick up where you were.');}});
 /* the home page's daily drill deep-links here: upwind/?drill=placard (unknown ids, and ids not built yet, are ignored) */
 {const q=new URLSearchParams((typeof location!=='undefined'&&location.search)||'').get('drill');if(q&&DRILLS[q]&&typeof drillStart==='function')drillStart(q);}
 /* Charge the Line's EV fire debrief deep-links an incident and a layout: upwind/?scn=liion&v=A (unknown or locked incidents and unknown layouts are ignored) */
