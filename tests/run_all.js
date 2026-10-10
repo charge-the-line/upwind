@@ -363,4 +363,8 @@ if(want.includes('home')){report('home','no copy left over from the build-out: n
  {const {api,els,store}=boot({preconnect:JSON.stringify({name:'Jo Lee',org:'Station 4'})});els['h-prog'].onclick();const pre=(els['info-b'].innerHTML.match(/id="p-name"[^>]*value="([^"]*)"/)||[])[1];els['p-name'].value='Pat Q';els['p-dept'].value='Station 9';els['p-name'].onchange();const hub=JSON.parse(store.preconnect);const own=api.load();
   report('voice','one name store: My progress reads the hub profile and writes it back (and keeps its own copy for the record)',pre==='Jo Lee'&&hub.name==='Pat Q'&&hub.org==='Station 9'&&own.name==='Pat Q',`pre ${pre} hub ${hub.name}/${hub.org}`);}
 }
+
+{// Continue opens the activity itself (milestone 8): ?scn= an incident (already), ?lesson=1 the lesson
+ const {boot}=require('./uw_mock.js');global.__loc={search:'?lesson=1'};const a=boot();global.__loc={search:'?scn=i75&lesson=1'};const b=boot();global.__loc=undefined;
+ report('voice','?lesson=1 opens the lesson; an incident link wins over it',a.api.LS()!==null&&b.api.S()&&b.api.S().id==='i75'&&b.api.LS()===null,`lesson ${a.api.LS()!==null} scn ${b.api.S()&&b.api.S().id}`);}
 console.log(`\n${n-failed}/${n} checks passed · ${Math.round((Date.now()-T0)/1000)} s`);process.exit(failed?1:0);
