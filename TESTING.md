@@ -113,3 +113,6 @@ Rules this module adds to the platform's (see CLAUDE.md for the platform rules):
 
 ## 0.12.1 checks (October 8, 2026)
 - `liion`: the deep link `?scn=liion&v=A` opens the lithium-ion fire on Layout A; an unknown layout opens a random one; an unknown incident opens nothing; the layout pin does not stick.
+
+## Offline helper (final sweep milestone 1, October 10, 2026)
+- `syntax`: the page and the shared core are network-first with a short wait (`NET_WAIT` ≤ 4 s, `Promise.race`), only 2xx answers are saved, installs use `cache:'reload'`, index.html is cached once. Proven in a browser (scratch): the first launch after a deploy runs the new page with the new core; a hanging network shows the saved page in under 4 s; a 404 serves the saved page.

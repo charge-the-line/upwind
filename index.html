@@ -145,7 +145,7 @@ button.on2{background:#1f6b45!important;border-color:#2f9e66!important;color:#ff
 <div class="overlay hidden" id="infoov" style="z-index:15"><div class="box"><div id="info-b"></div><button class="go" id="info-close" style="width:100%;margin-top:10px">Close</button></div></div>
 <script>
 /* =================== core =================== */
-const APP_VERSION='0.12.1';
+const APP_VERSION='0.12.2';
 /* Screen wake lock (Milestone 1): on only while an incident runs. */
 const WAKE={s:null,want:false};
 function keepAwake(on){WAKE.want=!!on;const wl=(typeof navigator!=='undefined')&&navigator.wakeLock;if(!wl||!wl.request)return;
