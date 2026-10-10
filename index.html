@@ -106,7 +106,7 @@ button.on2{background:#1f6b45!important;border-color:#2f9e66!important;color:#ff
   <p class="stat" id="tierhelp" style="margin:0 0 10px"></p>
   <div class="sec">Drill night</div>
   <button id="b-inst" style="width:100%;margin-bottom:8px">Instructor mode: off</button>
-  <p class="stat" style="margin:0 0 6px">Live injects (a wind shift, a second container, a symptomatic bystander, a meter alarm) and a freeze while an incident runs. On by itself during a Drill Night. Arrives with the first incidents.</p>
+  <p class="stat" style="margin:0 0 6px">Live injects (a wind shift, a second container, a symptomatic bystander, a meter alarm) and a freeze while an incident runs. On by itself during a Drill Night.</p>
   <div class="sec">More</div>
   <div class="row"><button id="h-ref">Pocket reference</button><button id="h-prog">My progress</button></div>
   <button id="h-about" style="width:100%;margin-top:6px">About this app</button>
@@ -145,7 +145,7 @@ button.on2{background:#1f6b45!important;border-color:#2f9e66!important;color:#ff
 <div class="overlay hidden" id="infoov" style="z-index:15"><div class="box"><div id="info-b"></div><button class="go" id="info-close" style="width:100%;margin-top:10px">Close</button></div></div>
 <script>
 /* =================== core =================== */
-const APP_VERSION='0.12.4';
+const APP_VERSION='0.12.5';
 /* Screen wake lock (Milestone 1): on only while an incident runs. */
 const WAKE={s:null,want:false};
 function keepAwake(on){WAKE.want=!!on;const wl=(typeof navigator!=='undefined')&&navigator.wakeLock;if(!wl||!wl.request)return;
@@ -195,7 +195,7 @@ function homeRender(){const R=readiness();$('erg-ed').textContent=ERG_ED;
   {const c=chipT('lesson','lesson');const e=$('chip-lesson');if(e){const t=c===null?'—':c;if(e.textContent!==t)e.textContent=t;e.classList.toggle('dim',c===null);e.classList.toggle('due',c==='Due'||c==='Again');}}
   const dh=PLAN.drills.map(d=>item('drill',d)).join(''),sh=PLAN.scn.map(s=>item('scenario',s)).join(''),rh=PLAN.real.map(s=>item('scenario',s)).join('');if($('drills').innerHTML!==dh)$('drills').innerHTML=dh;if($('incidents').innerHTML!==sh)$('incidents').innerHTML=sh;if($('realcalls').innerHTML!==rh)$('realcalls').innerHTML=rh;
   const t=`${R.done} of ${R.total} activities`;if($('rdy-t').textContent!==t)$('rdy-t').textContent=t;
-  const sub=R.done?`${ndue?ndue+' due for review · ':''}${TIER===0?'Guided':TIER===1?'Recall':'Chaos'} mode · incidents coming next`:'Start with the lesson, then a drill a day. Your best scores show up here.';if($('rdy-s').textContent!==sub)$('rdy-s').textContent=sub;
+  const sub=R.done?`${ndue?ndue+' due for review · ':''}${TIER===0?'Guided':TIER===1?'Recall':'Chaos'} mode`:'Start with the lesson, then a drill a day. Your best scores show up here.';if($('rdy-s').textContent!==sub)$('rdy-s').textContent=sub;
   const n=R.pct+'%';if($('rdy-n').textContent!==n)$('rdy-n').textContent=n;const bar=$('rdy-bar');if(bar&&bar.style)bar.style.width=R.pct+'%';}
 function showHome(){keepAwake(false);['infoov','lessonov','quizov','doneov','runov'].forEach(i=>$(i).classList.add('hidden'));document.querySelectorAll('[data-tier]').forEach(b=>b.classList.toggle('on',+b.dataset.tier===TIER));$('tierhelp').textContent=['Guided: the ERG distances are drawn on the map and the next step is named.','Recall: no hints. You set the zones and pick the actions.','Chaos: Recall plus a wind shift, a second container, a sensor fault, a crowd.'][TIER];homeRender();}
 document.querySelectorAll('[data-tier]').forEach(b=>b.onclick=()=>{TIER=+b.dataset.tier;showHome();});
@@ -205,7 +205,7 @@ $('h-ref').onclick=()=>info(`<h2>Pocket reference</h2>
  <div class="sec">Zones</div><p><span class="zone" style="background:var(--hot)"></span><b>Hot:</b> the hazard. Operations crews do not enter.<br><span class="zone" style="background:var(--warm)"></span><b>Warm:</b> decon and the path in and out.<br><span class="zone" style="background:var(--cold)"></span><b>Cold:</b> command, staging, EMS. Upwind, uphill, upstream of all of it.</p>
  <div class="sec">4-gas meter (generic)</div><div class="mrow"><span>Oxygen</span><b>${METER.o2lo}% low · ${METER.o2hi}% high</b></div><div class="mrow"><span>Flammable (LEL)</span><b>alarm at ${METER.lel}%</b></div><div class="mrow"><span>Carbon monoxide</span><b>${METER.co} ppm</b></div><div class="mrow"><span>Hydrogen sulfide</span><b>${METER.h2s} ppm</b></div><p class="stat">Bump test before use. A 4-gas meter does not read ammonia or chlorine. <b>Alarm settings vary by meter and department — know yours.</b></p>
  <div class="sec">Always right</div><p>Isolate. Deny entry. Call the hazmat team. Then, from outside the hazard, do what Operations can do: protect people, dike and divert, knock down vapor from a distance, decon, notify.</p>
- <p class="stat">Distances are not listed here on purpose: read them from your current ERG. The drills and incidents will quote ${ERG_ED} lines once each one has been checked against the book.</p>`);
+ <p class="stat">Distances are not listed here on purpose: read them from your current ERG. The drills and incidents quote ${ERG_ED} lines that were each checked against the printed book or the PHMSA app.</p>`);
 $('h-about').onclick=()=>info(`<h2>About Upwind</h2><p>Upwind is a free practice tool for hazardous-materials response at the Awareness and Operations level, in the same family as Charge the Line, Patient Contact, Bleed Control and BLS Ready. It models the competencies in NFPA 470 in its own words and follows the ${ERG_ED} workflow. It never teaches hot-zone entry as an Operations task.</p>
  <p><b>It is practice, not certification, and not a reference.</b> On a call, use your department's current ERG or the PHMSA ERG app, and your own procedures.</p>
  <p><b>Local details still to confirm with Bay County Emergency Management:</b> ${TO_CONFIRM.map(esc).join('; ')}. No phone numbers are built in until they are confirmed.</p>

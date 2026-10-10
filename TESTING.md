@@ -1,6 +1,6 @@
 # Upwind — testing guide
 
-`node tests/run_all.js` runs the suite in about a second (U0: 38 checks). `python3 tests/browser_check.py` opens the real page in Chromium at 320, 390 and 844 px with slow taps and fails on any JavaScript error, overflow, or button under 44 px.
+`node tests/run_all.js` runs the suite in a few seconds. `python3 tests/browser_check.py` opens the real page in Chromium at 320, 390 and 844 px with slow taps and fails on any JavaScript error, overflow, or button under 44 px.
 
 Rules this module adds to the platform's (see CLAUDE.md for the platform rules):
 
@@ -125,3 +125,7 @@ Rules this module adds to the platform's (see CLAUDE.md for the platform rules):
 ## Rule 15 and the wake lock (final sweep milestone 2, October 10, 2026)
 - The real clock stops while the screen is off: tests call `pcPauseHide()`, advance the fake clock, `pcPauseShow()`, and assert no penalty and no metric change (and that an instructor freeze is left alone where there is one). Proven to fail (scratch): removing the hookup (BLS Ready) or scoring on the wall clock again (Bleed Control) fails the check.
 - The wake lock is released on every quit path added in this milestone (stubbed `navigator.wakeLock`, one request per one release).
+
+## Truth and counts (final sweep milestone 3, October 10, 2026)
+- `home`: no build-out copy left ("incidents coming next", "Arrives with the first incidents", "will quote … once checked").
+- `syntax`: the docs guard (CLAUDE.md "Current version" equals `APP_VERSION`; README.txt names `preconnect-core.js` and `fonts/`).

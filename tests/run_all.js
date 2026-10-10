@@ -31,6 +31,8 @@ if(want.includes('syntax')){try{new vm.Script(html.split('<script>')[1].split('<
    report('syntax','statistics snippet present, module code uw, pointed at preconnect.goatcounter.com',/window\.PCA_MOD="uw"/.test(snip)&&/preconnect\.goatcounter\.com\/count/.test(snip));
    report('syntax','drill night bar and picker markup present, settings sheet present with every switch',/<div id="pc-drill" class="pc-drillbar hidden" data-hub="\.\.\/"><\/div>/.test(html)&&/id="pc-drillov"/.test(html)&&['text','contrast','motion','sound','haptics','stats'].every(k=>html.includes(`data-set="${k}"`))&&/data-val="day"/.test(html));
    report('syntax','manifest and icons exist',fs.existsSync(path.join(__dirname,'..','manifest.json'))&&fs.existsSync(path.join(__dirname,'..','icon-192.png'))&&fs.existsSync(path.join(__dirname,'..','icon-512.png'))&&/"name": "Upwind"/.test(fs.readFileSync(path.join(__dirname,'..','manifest.json'),'utf8')));}
+{const cm=fs.readFileSync(path.join(__dirname,'..','CLAUDE.md'),'utf8'),rd=fs.readFileSync(path.join(__dirname,'..','README.txt'),'utf8');const cv=(cm.match(/\*\*Current version: ([\d.]+)/)||[])[1],av=(html.match(/APP_VERSION='([^']+)'/)||[])[1];
+ report('syntax','the briefing names the shipped version and the README lists the core and the fonts (final sweep M3)',cv===av&&/preconnect-core\.js/.test(rd)&&/fonts\//.test(rd),`briefing ${cv}, app ${av}`);}
   {const {api}=boot();report('syntax','boots in the harness; settings and core helpers are reachable',typeof api.settings().sound==='string'&&typeof api.pcSpacing==='function'&&api.APP_VERSION===(html.match(/APP_VERSION='([^']+)'/)||[])[1]);}}
 
 if(want.includes('facts')){const {api}=boot();const M=api.MAT;
@@ -332,4 +334,5 @@ if(want.includes('smooth')){// rule 15 (final sweep M2): the incident's real clo
   {global.__T=1000;const {api}=boot();api.setInst(true);api.runStart('i75');api.instOpen();const f0=api.S().frozenAt;api.pcPauseHide();global.__T+=30;api.pcPauseShow();
    report('smooth','rule 15: the screen going off and on never thaws an incident the instructor froze',api.S().frozenAt===f0&&f0!==null);}
 }
+if(want.includes('home')){report('home','no copy left over from the build-out: nothing says incidents are coming next, arriving with the first incidents, or will quote lines once checked (final sweep M3)',!/incidents coming next|Arrives with the first incidents|will quote/.test(html));}
 console.log(`\n${n-failed}/${n} checks passed · ${Math.round((Date.now()-T0)/1000)} s`);process.exit(failed?1:0);
