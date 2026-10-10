@@ -145,7 +145,7 @@ button.on2{background:#1f6b45!important;border-color:#2f9e66!important;color:#ff
 <div class="overlay hidden" id="infoov" style="z-index:15"><div class="box"><div id="info-b"></div><button class="go" id="info-close" style="width:100%;margin-top:10px">Close</button></div></div>
 <script>
 /* =================== core =================== */
-const APP_VERSION='0.12.2';
+const APP_VERSION='0.12.3';
 /* Screen wake lock (Milestone 1): on only while an incident runs. */
 const WAKE={s:null,want:false};
 function keepAwake(on){WAKE.want=!!on;const wl=(typeof navigator!=='undefined')&&navigator.wakeLock;if(!wl||!wl.request)return;
@@ -157,7 +157,7 @@ const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'
 let TIER=0,NOW=()=>performance.now()/1000;
 const pca=(f,...a)=>{try{const P=typeof window!=='undefined'&&window.PCA;if(P&&P[f])return P[f](...a);}catch(e){}};
 const KEY='upwind';
-function load(){try{return JSON.parse(localStorage.getItem(KEY))||{runs:[]};}catch(e){return {runs:[]};}}
+function load(){let p=null;try{p=JSON.parse(localStorage.getItem(KEY));}catch(e){}if(!p||typeof p!=='object'||Array.isArray(p))p={runs:[]};p.runs=Array.isArray(p.runs)?p.runs.filter(r=>r&&typeof r==='object'):[];return p;}/* wrong-shape data (a bad backup) never bricks the page */
 function save(p){try{localStorage.setItem(KEY,JSON.stringify(p));}catch(e){}}
 function record(kind,id,score,extra){const p=load();p.runs=(p.runs||[]).concat([pcDrillStamp(Object.assign({kind,id,score,d:new Date().toISOString(),tier:TIER},extra||{}))]).slice(-500);save(p);}
 function info(h){$('info-b').innerHTML=h;$('infoov').classList.remove('hidden');}$('info-close').onclick=()=>$('infoov').classList.add('hidden');
@@ -217,7 +217,7 @@ $('h-prog').onclick=()=>{const p=load();const R=p.runs||[];const best=(k,id)=>{c
    <button id="p-csv" style="width:100%;margin-top:10px">Download practice record (CSV)</button>`);
   $('p-csv').onclick=()=>{const q=load();q.name=$('p-name').value.trim();q.dept=$('p-dept').value.trim();save(q);const nm={lesson:'Lesson',scenario:'Incident',drill:'Drill'};const NAME=Object.fromEntries([...PLAN.drills,...PLAN.scn,...PLAN.real].map(x=>[x[0],x[1]]));
     const rows=[['Name','Organization','Type','Activity','Date','Mode','Score']].concat((q.runs||[]).map(r=>[q.name||'',q.dept||'',nm[r.kind]||r.kind,r.kind==='lesson'?'The lesson':NAME[r.id]||r.id,r.d.slice(0,16).replace('T',' '),r.kind==='scenario'?['Guided','Recall','Chaos'][r.tier]||'':'',r.score]));
-    const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='upwind-practice-record.csv';a.click();}catch(e){}};};
+    const csv=pcCsv(rows);/* the core quotes every cell and defuses =, +, -, @ formulas */try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='upwind-practice-record.csv';a.click();}catch(e){}};};
 /* =================== the lesson (U1): 12 slides on the core engine, a check on each =================== */
 const LESSON=[
  {t:'Hazmat until proven otherwise',pts:['The call rarely says "hazmat." It says rollover, odor, sick people, alarm sounding, smoke that looks wrong.','Clues come from a distance: the occupancy (co-op, pool, siding, highway), the container shape, placards and markings, what dispatch heard, what you see through binoculars.','If you can smell it, you are standing in it. Senses are a last clue, not a tool.'],
