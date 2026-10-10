@@ -54,7 +54,7 @@ button:active{transform:translateY(1px)}button:disabled{opacity:.45;cursor:defau
 .brand{font-family:"Saira Condensed",sans-serif;font-weight:700;font-size:15px;letter-spacing:1.5px;color:var(--acc)}
 .top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px}
 .card{background:var(--deck);border:0;border-left:4px solid var(--acc);border-radius:6px;padding:12px 14px;margin-bottom:10px}.card.rdy{background:linear-gradient(135deg,rgba(73,199,111,.2),var(--deck) 70%)}
-.stat{font-size:13px;color:var(--soft);margin-top:6px;line-height:1.35}
+.stat{font-size:15px;color:var(--soft);margin-top:6px;line-height:1.4}#rdy-s{font-size:15px;line-height:1.4}
 .row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
 .overlay{position:fixed;inset:0;background:rgba(6,10,16,.93);display:flex;align-items:flex-start;justify-content:center;padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(16px + env(safe-area-inset-bottom,0px));z-index:10;overflow:auto}
 .overlay .box{background:var(--deck);border:1px solid var(--line);border-radius:8px;padding:18px;max-width:480px;width:100%;margin:auto}
@@ -62,22 +62,22 @@ button:active{transform:translateY(1px)}button:disabled{opacity:.45;cursor:defau
 .overlay p{font-size:16px;line-height:1.5;color:#dce6f0;margin:0 0 12px}
 .mrow{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-top:1px solid #2a3a4c;font-size:15px}.mrow:first-child{border-top:0}.mrow span{color:var(--soft)}
 .tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:6px 0 10px}
-.scen{display:block;width:100%;text-align:left;padding:12px 70px 12px 14px;margin-bottom:8px;position:relative;background:var(--deck);border:0;border-left:4px solid var(--acc);border-radius:6px}.scen b{display:block;font-family:"Saira Condensed";font-size:21px;font-weight:600;line-height:1.05}.scen span{font-size:14px;color:var(--soft)}.scen .chip{position:absolute;right:12px;top:50%;transform:translateY(-50%)}
+.scen{display:block;width:100%;text-align:left;padding:12px 70px 12px 14px;margin-bottom:8px;position:relative;background:var(--deck);border:0;border-left:4px solid var(--acc);border-radius:6px}.scen b{display:block;font-family:"Saira Condensed";font-size:21px;font-weight:600;line-height:1.05}.scen span{font-size:15px;color:var(--soft);line-height:1.35}.scen .chip{position:absolute;right:12px;top:50%;transform:translateY(-50%)}
 .scen.soon{border-left-color:var(--line)}
-.legal{font-size:12px;color:#8b9cad;line-height:1.45;margin-top:10px}
+.legal{font-size:15px;color:#9aabbc;line-height:1.45;margin-top:10px}
 input{font-family:inherit;font-size:16px;padding:10px;border-radius:8px;border:1px solid var(--line);background:#0d141c;color:var(--ink);width:100%}
 .bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden}.bar div{height:100%;width:0;background:var(--acc)}
 #runov .box{max-width:540px;padding:12px}
 .runhdr{display:flex;align-items:center;gap:8px;margin-bottom:6px}.runhdr b{font-family:"Saira Condensed";font-size:20px;line-height:1.05;display:block}.runhdr .stat{margin:0}.runhdr .clock{font-family:"Saira Condensed";font-size:20px;color:var(--soft);margin-left:auto}
 #uw-svg{width:100%;display:block;touch-action:none;border-radius:6px}.handle{cursor:grab}
-.meter{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;background:#05080b;border:1px solid var(--line);padding:6px;border-radius:4px;margin:6px 0}.meter div{text-align:center;font-family:"Saira Condensed"}.meter small{display:block;font-size:10px;color:var(--soft);letter-spacing:.08em}.meter span{font-size:22px;font-weight:700;line-height:1.1;color:#9be3a9}.meter.alarm span{color:var(--hot)}
+.meter{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;background:#05080b;border:1px solid var(--line);padding:6px;border-radius:4px;margin:6px 0}.meter div{text-align:center;font-family:"Saira Condensed"}.meter small{display:block;font-size:13px;color:var(--soft);letter-spacing:.08em}.meter span{font-size:22px;font-weight:700;line-height:1.1;color:#9be3a9}.meter.alarm span{color:var(--hot)}
 #uw-now{background:var(--deck2);border:1px solid var(--line);border-radius:6px;padding:8px 10px;font-size:15px;min-height:40px;margin:6px 0}
-.rad{background:var(--deck);border-left:4px solid var(--acc);padding:6px 10px;margin:4px 0;font-size:14px}.rad.bad{border-left-color:var(--hot)}
+.rad{background:var(--deck);border-left:4px solid var(--acc);padding:6px 10px;margin:4px 0;font-size:15px;line-height:1.4}.rad.bad{border-left-color:var(--hot)}
 .zrow{display:flex;align-items:center;gap:8px;margin:6px 0}.zrow .zl{font-family:"Saira Condensed";text-transform:uppercase;letter-spacing:.06em;width:52px}.zrow b{font-family:"Saira Condensed";font-size:20px;min-width:64px;text-align:center}.zrow button{min-width:48px}
 .cool{opacity:.45;pointer-events:none}
 button.on2{background:#1f6b45!important;border-color:#2f9e66!important;color:#fff}
 .zone{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:-1px}
-.tag{display:inline-block;font-family:"Saira Condensed",sans-serif;font-size:14px;font-weight:600;letter-spacing:.5px;border-radius:4px;padding:2px 8px;margin-bottom:8px;background:var(--acc);color:var(--acc-ink)}
+.tag{display:inline-block;font-family:"Saira Condensed",sans-serif;font-size:15px;font-weight:600;letter-spacing:.5px;border-radius:4px;padding:2px 8px;margin-bottom:8px;background:var(--acc);color:var(--acc-ink)}
 .opt{display:block;width:100%;text-align:left;margin-bottom:8px;padding:12px;font-size:16px}
 .big{font-family:"Saira Condensed";font-size:60px;font-weight:700;color:var(--acc);line-height:1}
 .slide h2{font-size:30px}.slide ul{margin:0 0 12px;padding-left:20px;font-size:16px;line-height:1.5}.slide li{margin-bottom:4px}
@@ -145,7 +145,7 @@ button.on2{background:#1f6b45!important;border-color:#2f9e66!important;color:#ff
 <div class="overlay hidden" id="infoov" style="z-index:15"><div class="box"><div id="info-b"></div><button class="go" id="info-close" style="width:100%;margin-top:10px">Close</button></div></div>
 <script>
 /* =================== core =================== */
-const APP_VERSION='0.12.5';
+const APP_VERSION='0.12.6';
 /* Screen wake lock (Milestone 1): on only while an incident runs. */
 const WAKE={s:null,want:false};
 function keepAwake(on){WAKE.want=!!on;const wl=(typeof navigator!=='undefined')&&navigator.wakeLock;if(!wl||!wl.request)return;

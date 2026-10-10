@@ -1,6 +1,6 @@
 # Upwind — testing guide
 
-`node tests/run_all.js` runs the suite in a few seconds. `python3 tests/browser_check.py` opens the real page in Chromium at 320, 390 and 844 px with slow taps and fails on any JavaScript error, overflow, or button under 44 px.
+`node tests/run_all.js` runs the suite in a few seconds. `python3 tests/browser_check.py` opens the real page in Chromium at 320, 390 and 844 px with slow taps and fails on any JavaScript error, text under the floor (15 px for a sentence, 13 px for a caption), a button under 44 px tall or wide, overflow, or button under 44 px.
 
 Rules this module adds to the platform's (see CLAUDE.md for the platform rules):
 

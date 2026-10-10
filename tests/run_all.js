@@ -33,6 +33,12 @@ if(want.includes('syntax')){try{new vm.Script(html.split('<script>')[1].split('<
    report('syntax','manifest and icons exist',fs.existsSync(path.join(__dirname,'..','manifest.json'))&&fs.existsSync(path.join(__dirname,'..','icon-192.png'))&&fs.existsSync(path.join(__dirname,'..','icon-512.png'))&&/"name": "Upwind"/.test(fs.readFileSync(path.join(__dirname,'..','manifest.json'),'utf8')));}
 {const cm=fs.readFileSync(path.join(__dirname,'..','CLAUDE.md'),'utf8'),rd=fs.readFileSync(path.join(__dirname,'..','README.txt'),'utf8');const cv=(cm.match(/\*\*Current version: ([\d.]+)/)||[])[1],av=(html.match(/APP_VERSION='([^']+)'/)||[])[1];
  report('syntax','the briefing names the shipped version and the README lists the core and the fonts (final sweep M3)',cv===av&&/preconnect-core\.js/.test(rd)&&/fonts\//.test(rd),`briefing ${cv}, app ${av}`);}
+{// final sweep M4 (layout and touch): the page's own CSS declares no font size under 13 px (the caption floor; sentences are 15 px, measured for real by browser_check.py), and the shared core carries the platform rules
+  const css=[...html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)].map(m=>m[1]).join('\n');const low=[...css.matchAll(/font-size:\s*(\d+(?:\.\d+)?)px/g)].map(m=>+m[1]).filter(v=>v<13);
+  const core=fs.readFileSync(path.join(__dirname,'..','preconnect-core.js'),'utf8');
+  report('syntax','no font size under 13 px in this page\'s CSS (final sweep M4)',low.length===0,low.length?`found ${low.join(', ')} px`:'all 13 px or more');
+  report('syntax','the shared core carries the milestone 4 rules: settings notes 15 px with a padded Details link, segments 44 px wide in rows that wrap, tables that wrap a long value (final sweep M4)',
+    /\.set \.k small\{display:block;font-size:15px/.test(core)&&/\.set \.k small a\{display:inline-block;padding:11px 6px;margin:-11px -6px\}/.test(core)&&/\.seg2 button\{[^}]*min-width:44px/.test(core)&&/\.set\{display:flex;flex-wrap:wrap/.test(core)&&/\.pc-table\{[^}]*overflow-wrap:anywhere/.test(core)&&/\.pc-table td:last-child\{[^}]*white-space:normal/.test(core),'');}
   {const {api}=boot();report('syntax','boots in the harness; settings and core helpers are reachable',typeof api.settings().sound==='string'&&typeof api.pcSpacing==='function'&&api.APP_VERSION===(html.match(/APP_VERSION='([^']+)'/)||[])[1]);}}
 
 if(want.includes('facts')){const {api}=boot();const M=api.MAT;
