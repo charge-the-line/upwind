@@ -133,3 +133,6 @@ Rules this module adds to the platform's (see CLAUDE.md for the platform rules):
 ## 0.14.0 checks (added October 10, 2026, final sweep milestone 5, one voice)
 
 - `voice`: Start on a Real Call briefing and Stop and go back in the run header; Again · Home · Next on every result, where `nextOf` walks the home list's order and skips a locked incident (the lesson leads to the placard drill; the last Real Call has no Next and Home becomes the primary button); a quick drill's Next opens the next drill; ◂ Preconnect · Feedback under every result; tier help from the core; the per-department-SOP chip on the lithium-ion record's three general-guidance blocks; About ends with the shared version line; My progress reads and writes the hub profile.
+
+## Every activity with real taps (milestone 10)
+`PC_ALL=1 python3 tests/browser_check.py` (milestone 10, lean finish) also plays every activity to the end with real taps at 390 px: the lesson, the eight drills, the eight incidents on layout A and the three Real Calls; about 30 minutes more. Run it before a release.
