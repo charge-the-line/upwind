@@ -367,4 +367,8 @@ if(want.includes('home')){report('home','no copy left over from the build-out: n
 {// Continue opens the activity itself (milestone 8): ?scn= an incident (already), ?lesson=1 the lesson
  const {boot}=require('./uw_mock.js');global.__loc={search:'?lesson=1'};const a=boot();global.__loc={search:'?scn=i75&lesson=1'};const b=boot();global.__loc=undefined;
  report('voice','?lesson=1 opens the lesson; an incident link wins over it',a.api.LS()!==null&&b.api.S()&&b.api.S().id==='i75'&&b.api.LS()===null,`lesson ${a.api.LS()!==null} scn ${b.api.S()&&b.api.S().id}`);}
+
+{// Rule 14, final sweep milestone 9: a scan for refusing buttons
+ const left=[...html.matchAll(/(?:now|radio)\(([^;]{0,160}?)\);return;/g)].map(m=>m[1]);
+ report('teach','no button refuses a wrong action: a wrong call happens, costs points, and the feedback names the right call',left.length===0,left.slice(0,3).join(' | ')||'none');}
 console.log(`\n${n-failed}/${n} checks passed · ${Math.round((Date.now()-T0)/1000)} s`);process.exit(failed?1:0);

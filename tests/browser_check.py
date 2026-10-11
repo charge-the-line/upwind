@@ -1,3 +1,4 @@
+import os
 #!/usr/bin/env python3
 """Real-browser check (optional). Needs: pip install playwright && playwright install chromium
 Opens the home screen, Settings, the pocket reference, About, My progress and the Drill Night picker at phone sizes,
@@ -102,6 +103,24 @@ def real_call(pg, w, scn, pre, force=None, done_text='What happened'):   # a Rea
     rows.append((w, pre + '(full)', 0 if pg.is_visible('#doneov') and pg.text_content('#done-s') == '100' and done_text in pg.text_content('#done-b') else 99))
     rows.append((w, pre + 'debrief', pg.evaluate(OVER) + 1000 * pg.evaluate(SMALL))); pg.evaluate("localStorage.removeItem('upwind')")
 
+
+# ---- Milestone 10 (lean finish): every activity to the end with real taps at 390 px, when PC_ALL=1 ----
+def lesson_full(pg, open_sel):   # the lesson to the end: the right answer tapped by its visible text, then Next / Finish
+    pg.click(open_sel); pg.wait_for_timeout(300)
+    for _ in range(40):
+        if not pg.evaluate("!!(window.LS&&LS.cfg)"): break
+        good = pg.evaluate("LS.cfg.slides[LS.i].o.find(o=>o[1]==='good')[0]")
+        pg.locator('[data-l="ans"]', has_text=re.compile('^' + re.escape(good) + '$')).first.click(delay=120); pg.wait_for_timeout(150)
+        pg.click('#l-next', delay=120); pg.wait_for_timeout(250)
+    return pg.evaluate("!(window.LS&&LS.cfg)")
+def quiz_full(pg, q='QZ', ans='[data-q="ans"]', nxt='[data-q="next"]'):   # a quiz to the end: the right answer by its visible text, then Next / Results
+    for _ in range(40):
+        if not pg.evaluate("!!(window.%s&&%s.qs&&%s.i<%s.qs.length)" % (q, q, q, q)): break
+        a = pg.evaluate("%s.qs[%s.i].a" % (q, q)); pg.locator(ans, has_text=re.compile('^' + re.escape(a) + '$')).first.click(delay=120); pg.wait_for_timeout(120)
+        pg.locator(nxt).first.click(delay=120); pg.wait_for_timeout(120)
+    pg.wait_for_timeout(300)
+def saved(pg, key, test):   # the record on this phone proves the activity finished
+    return pg.evaluate("(()=>{const p=JSON.parse(localStorage.getItem('%s')||'{}');return %s;})()" % (key, test))
 with sync_playwright() as p:
     b = p.chromium.launch()
     for w in (320, 390):
@@ -158,6 +177,18 @@ with sync_playwright() as p:
     pg = b.new_page(viewport={'width': 844, 'height': 390}, device_scale_factor=2, is_mobile=True, has_touch=True); pg.on('pageerror', lambda e: errs.append(str(e)))
     pg.goto(URL); pg.wait_for_timeout(300); rows.append((844, 'landscape', pg.evaluate(OVER) + 1000 * pg.evaluate(SMALL)))
     tap(pg, '#h-set'); pg.wait_for_timeout(150); rows.append((844, 'settings land', pg.evaluate(OVER) + 1000 * pg.evaluate(SMALL))); tap(pg, '#set-close')
+    if os.environ.get('PC_ALL'):
+        pg = b.new_page(viewport={'width': 390, 'height': 800}, device_scale_factor=2, is_mobile=True, has_touch=True); pg.on('pageerror', lambda e: errs.append(str(e)))
+        pg.goto(URL); pg.wait_for_timeout(200); ok = lesson_full(pg, '#h-learn') and saved(pg, 'upwind', "(p.runs||[]).some(r=>r.kind==='lesson'&&r.score===100)"); rows.append((390, 'ALL lesson (full)', 0 if ok else 99))
+        for did in ('placard', 'erg', 'container', 'nfpa704', 'zones', 'meter', 'shelter', 'ppe'):
+            pg.goto(URL); pg.wait_for_timeout(200); tap(pg, '#h-drills'); pg.wait_for_timeout(200); tap(pg, f'[data-drill="{did}"]'); pg.wait_for_timeout(200); quiz_full(pg)
+            rows.append((390, f'ALL drill {did} (full)', 0 if saved(pg, 'upwind', f"(p.runs||[]).some(r=>r.kind==='drill'&&r.id==='{did}'&&r.score===100)") else 99))
+        for scn in ('i75', 'nurse', 'propane', 'pool', 'house', 'rail', 'powder'): incident(pg, 390, scn, 'ALL ' + scn + ' ', force='A')
+        for scn, dt in (('grani', ''), ('king', ''), ('epal', ''), ('liion', 'After an electric car fire')):
+            if dt: real_call(pg, 390, scn, 'ALL ' + scn + ' ', force='A', done_text=dt)
+            else: real_call(pg, 390, scn, 'ALL ' + scn + ' ')
+        pg.close()
+
     b.close()
 bad = 0
 for w, name, v in rows:
