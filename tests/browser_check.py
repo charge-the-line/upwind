@@ -1,11 +1,11 @@
-import os
 #!/usr/bin/env python3
 """Real-browser check (optional). Needs: pip install playwright && playwright install chromium
 Opens the home screen, Settings, the pocket reference, About, My progress and the Drill Night picker at phone sizes,
 plus landscape and Daylight, and fails on any JavaScript error, anything off-screen, or a button under 44 px.
 Usage: python3 tests/browser_check.py"""
-import pathlib, re, sys
+import os, pathlib, re, sys
 from playwright.sync_api import sync_playwright
+EXE = '/opt/pw-browsers/chromium' if os.path.exists('/opt/pw-browsers/chromium') else None   # the preinstalled Chromium, like the other modules' checks
 URL = (pathlib.Path(__file__).resolve().parent.parent / 'index.html').as_uri()
 OVER = "(()=>{let m=0;const vis=e=>e.checkVisibility?e.checkVisibility({visibilityProperty:true}):e.offsetParent!==null;document.querySelectorAll('body *').forEach(e=>{if(!vis(e))return;const r=e.getBoundingClientRect();if(r.width<1||r.height<1)return;m=Math.max(m,r.right-window.innerWidth);});return Math.round(m);})()"   # fixed elements count too (the hub header slipped past offsetParent)
 TEXT = "(()=>{let n=0;const vis=e=>e.checkVisibility?e.checkVisibility({visibilityProperty:true}):e.offsetParent!==null;document.querySelectorAll('body *').forEach(e=>{if(e.closest('svg')||!vis(e))return;const t=[...e.childNodes].filter(x=>x.nodeType===3).map(x=>x.textContent).join(' ').replace(/\\s+/g,' ').trim();if(t.length<2)return;const r=e.getBoundingClientRect();if(r.width<1||r.height<1)return;const fs=parseFloat(getComputedStyle(e).fontSize),w=t.split(' ').filter(x=>/[A-Za-z0-9]/.test(x)).length;if(fs<(w>=6?15:13)-.01)n++;});return n;})()"   # the text floor: 15 px for anything read as a sentence (six words or more), 13 px for captions; SVG numerals exempt
@@ -122,7 +122,7 @@ def quiz_full(pg, q='QZ', ans='[data-q="ans"]', nxt='[data-q="next"]'):   # a qu
 def saved(pg, key, test):   # the record on this phone proves the activity finished
     return pg.evaluate("(()=>{const p=JSON.parse(localStorage.getItem('%s')||'{}');return %s;})()" % (key, test))
 with sync_playwright() as p:
-    b = p.chromium.launch()
+    b = p.chromium.launch(executable_path=EXE) if EXE else p.chromium.launch()
     for w in (320, 390):
         pg = b.new_page(viewport={'width': w, 'height': 800}, device_scale_factor=2, is_mobile=True, has_touch=True)
         pg.on('pageerror', lambda e: errs.append(str(e)))

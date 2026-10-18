@@ -4,6 +4,7 @@
   "description": "Hazmat practice at the Awareness and Operations level: size-up, the ERG, zones, meters, and when to call the team.",
   "start_url": "./",
   "scope": "./",
+  "id": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#0a0c0f",

@@ -136,3 +136,7 @@ Rules this module adds to the platform's (see CLAUDE.md for the platform rules):
 
 ## Every activity with real taps (milestone 10)
 `PC_ALL=1 python3 tests/browser_check.py` (milestone 10, lean finish) also plays every activity to the end with real taps at 390 px: the lesson, the eight drills, the eight incidents on layout A and the three Real Calls; about 30 minutes more. Run it before a release.
+
+## The address (October 18, 2026, preconnect.org)
+- `tests/browser_check.py` launches the preinstalled Chromium (`EXE`, like the other modules); a newer Playwright in the test container no longer found its own headless shell.
+- `syntax`: no `CNAME` file in this repo (a module gets no custom domain; GitHub serves it at https://preconnect.org/upwind/), no file anywhere in the repo names the old github.io address, and `manifest.json` names no host (`start_url`, `scope` and `id` are `./`). Proven to fail on a planted `CNAME` and a planted absolute `id`.

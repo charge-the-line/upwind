@@ -90,7 +90,7 @@ button.on2{background:#1f6b45!important;border-color:#2f9e66!important;color:#ff
 <div id="pc-drill" class="pc-drillbar hidden" data-hub="../"></div>
 <div id="home">
   <div class="flex" style="margin:0 0 8px"><a href="../" style="display:inline-flex;align-items:center;min-height:44px;font-family:'Saira Condensed';font-size:15px;font-weight:600;letter-spacing:1px;color:#ff8a3d;text-decoration:none">◂ PRECONNECT</a><div class="sp"></div><a href="../feedback.html?from=uw" style="display:inline-flex;align-items:center;min-height:44px;font-size:14px;font-weight:700;color:var(--soft);text-decoration:none;margin-right:12px">Feedback</a><button class="gear" id="h-set">Settings</button></div>
-  <div class="top"><div><div class="brand" style="font-size:34px;letter-spacing:3px">UPWIND</div><h1 style="font-size:19px;font-weight:400;font-family:'Atkinson Hyperlegible',system-ui,sans-serif;margin-top:2px">Upwind, uphill, upstream. <span class="ver" style="font-size:15px;color:var(--soft)">v0.15.0</span></h1></div></div>
+  <div class="top"><div><div class="brand" style="font-size:34px;letter-spacing:3px">UPWIND</div><h1 style="font-size:19px;font-weight:400;font-family:'Atkinson Hyperlegible',system-ui,sans-serif;margin-top:2px">Upwind, uphill, upstream. <span class="ver" style="font-size:15px;color:var(--soft)">v0.15.1</span></h1></div></div>
   <div class="card rdy" id="rdy"><div class="flex"><div><div class="small">Your readiness</div><b id="rdy-t" style="display:block;font-family:'Saira Condensed';font-size:22px;line-height:1.05"></b><div class="small" id="rdy-s"></div></div><div class="sp"></div><div class="num" id="rdy-n"></div></div><div class="bar" style="margin-top:10px"><div id="rdy-bar" style="transition:width .6s ease-out"></div></div></div>
   <div class="card"><div class="small">What this is</div><p style="margin:4px 0 0;font-size:15px;line-height:1.45">Hazmat practice at the Awareness and Operations level: see it from a distance, look it up, set the zones, read the meter, protect people, and know when the right call is <b>isolate, deny entry, call the hazmat team</b>. Built around the <b id="erg-ed"></b> workflow. <b>On a real call, use your department's current ERG or the PHMSA ERG app.</b></p></div>
   <button class="scen" id="h-learn"><span class="chip dim" id="chip-lesson">—</span><b>The lesson</b><span>12 short slides with a check each: recognition, placards, containers, the ERG, zones, PPE limits, meters, defensive actions, decon, notifications, handoff</span></button>
@@ -142,7 +142,7 @@ button.on2{background:#1f6b45!important;border-color:#2f9e66!important;color:#ff
 <div class="overlay hidden" id="infoov" style="z-index:15"><div class="box"><div id="info-b"></div><button class="go" id="info-close" style="width:100%;margin-top:10px">Close</button></div></div>
 <script>
 /* =================== core =================== */
-const APP_VERSION='0.15.0';
+const APP_VERSION='0.15.1';
 /* Screen wake lock (Milestone 1): on only while an incident runs. */
 const WAKE={s:null,want:false};
 function keepAwake(on){WAKE.want=!!on;const wl=(typeof navigator!=='undefined')&&navigator.wakeLock;if(!wl||!wl.request)return;

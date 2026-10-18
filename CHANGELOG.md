@@ -2,6 +2,9 @@
 
 Hazmat Awareness and Operations modeled on NFPA 470 and the ERG2024 workflow, in our own words. Plain-language history, newest first. Practice, not certification; always use your current ERG.
 
+## 0.15.1 — October 18, 2026 — preconnect.org
+- Preconnect lives at https://preconnect.org, and this module at https://preconnect.org/upwind/. Nothing in the app names a host: links stay relative, and the install settings (start, scope and id) are relative, so the offline copy, deep links and the new version notice work the same at the new address.
+
 ## 0.15.0 — October 11, 2026 — tester release
 - Every activity (the lesson, eight drills, eight incidents and three Real Calls) is played to the end with real taps at 390 px before a release.
 - CHANGELOG added; the post-pilot backlog recorded in CLAUDE.md.
